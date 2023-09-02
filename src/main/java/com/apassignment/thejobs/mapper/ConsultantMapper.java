@@ -6,7 +6,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 @Component
-public class consultantMapper {
+public class ConsultantMapper {
     public ConsultantDto fromConsultant(Consultant consultant) {
         ConsultantDto consultantDto = new ConsultantDto();
         BeanUtils.copyProperties(consultant, consultantDto);

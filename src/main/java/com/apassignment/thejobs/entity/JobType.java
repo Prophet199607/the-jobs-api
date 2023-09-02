@@ -28,4 +28,8 @@ public class JobType {
     @OneToMany(mappedBy = "jobType", fetch = FetchType.LAZY)
     private Set<Consultant> consultants = new HashSet<>();
 
+    public JobType(String jobType, int status) {
+        this.jobType = jobType;
+        this.status = status;
+    }
 }

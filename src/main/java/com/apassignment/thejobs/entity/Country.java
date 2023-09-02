@@ -27,4 +27,9 @@ public class Country {
 
     @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
     private Set<Consultant> consultants = new HashSet<>();
+
+    public Country(String countryName, int status) {
+        this.countryName = countryName;
+        this.status = status;
+    }
 }
