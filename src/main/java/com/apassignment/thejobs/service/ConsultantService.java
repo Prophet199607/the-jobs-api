@@ -1,6 +1,7 @@
 package com.apassignment.thejobs.service;
 
 import com.apassignment.thejobs.dto.ConsultantDto;
+import com.apassignment.thejobs.dto.ResponseDto;
 import com.apassignment.thejobs.entity.Consultant;
 
 import java.util.List;
@@ -10,6 +11,6 @@ public interface ConsultantService {
 
     List<ConsultantDto> fetchInstructors();
 
-    ConsultantDto createConsultant(ConsultantDto consultantDto);
+    ResponseDto createConsultant(ConsultantDto consultantDto);
 
 }

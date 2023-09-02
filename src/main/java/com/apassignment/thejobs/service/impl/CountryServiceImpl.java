@@ -20,11 +20,11 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public Country loadCountryById(Long countryId) {
-        return countryRepository.findById(countryId).orElseThrow(() -> new EntityNotFoundException("Consultant not found!"));
+        return countryRepository.findById(countryId).orElseThrow(() -> new EntityNotFoundException("Country not found!"));
     }
 
     @Override
-    public Country createCountry(String countryName, int status) {
-        return countryRepository.save(new Country(countryName, status));
+    public Country createCountry(Country country) {
+        return countryRepository.save(country);
     }
 }

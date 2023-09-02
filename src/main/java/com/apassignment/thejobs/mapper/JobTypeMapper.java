@@ -15,7 +15,7 @@ public class JobTypeMapper {
         return jobTypeDto;
     }
 
-    public JobType fromConsultantDto(JobTypeDto jobTypeDto) {
+    public JobType fromJobTypeDto(JobTypeDto jobTypeDto) {
         JobType jobType = new JobType();
         BeanUtils.copyProperties(jobTypeDto, jobType);
         return jobType;

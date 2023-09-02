@@ -15,7 +15,7 @@ public class CountryMapper {
         return countryDto;
     }
 
-    public Country fromConsultantDto(CountryDto countryDto) {
+    public Country fromCountryDto(CountryDto countryDto) {
         Country country = new Country();
         BeanUtils.copyProperties(countryDto, country);
         return country;

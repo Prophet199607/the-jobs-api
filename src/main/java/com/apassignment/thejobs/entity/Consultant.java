@@ -1,14 +1,19 @@
 package com.apassignment.thejobs.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "consultants")
 public class Consultant {
@@ -37,13 +42,11 @@ public class Consultant {
     private Set<Appointment> appointments = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", referencedColumnName = "country_id", nullable = false)
+    @JoinColumn(name = "country_id", referencedColumnName = "country_id")
     private Country country;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "jobtype_id", referencedColumnName = "jobtype_id", nullable = false)
     private JobType jobType;
-
-
 
 }
