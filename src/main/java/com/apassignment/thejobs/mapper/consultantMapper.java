@@ -13,5 +13,9 @@ public class consultantMapper {
         return consultantDto;
     }
 
-//    public Consultant fromConsultantDto()
+    public Consultant fromConsultantDto(ConsultantDto consultantDto) {
+        Consultant consultant = new Consultant();
+        BeanUtils.copyProperties(consultantDto, consultant);
+        return consultant;
+    }
 }
