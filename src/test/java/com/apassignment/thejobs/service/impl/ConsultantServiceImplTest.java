@@ -73,17 +73,16 @@ class ConsultantServiceImplTest {
 
         ConsultantDto consultantDto = consultantMapper.fromConsultant(consultant);
 
-        Country country = new Country(1L, "USA", 1);
+        Country country = new Country(10L, "USA", 1);
         consultantDto.setCountry(countryMapper.fromCountry(country));
 
-        JobType jobType = new JobType(1L,"Full stack developer", 1);
+        JobType jobType = new JobType(6L,"Full stack developer", 1);
         consultantDto.setJobType(jobTypeMapper.fromJobType(jobType));
 
         Consultant mappedConsultant = modelMapper.map(consultantDto, Consultant.class);
 
         when(consultantRepository.save(mappedConsultant))
                 .thenReturn(mappedConsultant);
-
 
         ResponseDto actualConsultantResponse =
                 consultantService.createConsultant(consultantDto);
@@ -94,8 +93,8 @@ class ConsultantServiceImplTest {
         assertEquals(consultantDto.getLastName(), actualConsultant.getLastName());
         assertEquals(consultantDto.getEmail(), actualConsultant.getEmail());
         assertEquals(consultantDto.getIsAvailable(), actualConsultant.getIsAvailable());
-//        assertEquals(consultantDto.getCountry().getCountryName(), actualConsultant.getCountry().getCountryName());
-//        assertEquals(consultantDto.getJobType().getJobType(), actualConsultant.getJobType().getJobType());
+        assertEquals(consultantDto.getCountry().getCountryName(), actualConsultant.getCountry().getCountryName());
+        assertEquals(consultantDto.getJobType().getJobType(), actualConsultant.getJobType().getJobType());
         assertEquals("Consultant has been saved successfully!", actualConsultantResponse.getMessage());
         verify(consultantRepository, times(1)).save(mappedConsultant);
     }

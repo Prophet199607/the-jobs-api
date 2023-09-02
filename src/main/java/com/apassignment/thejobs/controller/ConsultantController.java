@@ -4,10 +4,9 @@ import com.apassignment.thejobs.dto.ConsultantDto;
 import com.apassignment.thejobs.dto.ResponseDto;
 import com.apassignment.thejobs.service.ConsultantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/consultant")
@@ -16,13 +15,43 @@ public class ConsultantController {
     private ConsultantService consultantService;
 
     @GetMapping("/all")
-    public List<ConsultantDto> findAllConsultants() {
-        return consultantService.fetchInstructors();
+    public ResponseEntity<ResponseDto> findAllConsultants() {
+        ResponseDto responseDto = consultantService.fetchConsultants();
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
+
+    @GetMapping
+    public ResponseEntity<ResponseDto> searchConsultant(
+            @RequestParam(name = "keyword", defaultValue = "") String keyword,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size
+    ) {
+        ResponseDto consultantsByName = consultantService.findConsultantsByName(keyword, page, size);
+        return new ResponseEntity<>(consultantsByName, consultantsByName.getStatus());
     }
 
     @PostMapping
     public ResponseEntity<ResponseDto> createConsultant(@RequestBody ConsultantDto consultantDto) {
         ResponseDto responseDto = consultantService.createConsultant(consultantDto);
-        return  new ResponseEntity<>(responseDto, responseDto.getStatus());
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
+
+    @DeleteMapping("/{consultantId}")
+    public ResponseEntity<ResponseDto> deleteInstructor(@PathVariable Long consultantId) {
+        ResponseDto responseDto = consultantService.removeConsultant(consultantId);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
+
+    @PutMapping("/{consultantId}")
+    public ResponseEntity<ResponseDto> updateInstructor(@RequestBody ConsultantDto consultantDto, @PathVariable Long consultantId) {
+        consultantDto.setConsultantId(consultantId);
+        ResponseDto responseDto = consultantService.updateConsultant(consultantDto);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
+
+    @GetMapping("/find")
+    public ResponseEntity<ResponseDto> loadConsultantByEmail(@RequestParam(name = "email", defaultValue = "") String email) {
+        ResponseDto responseDto = consultantService.loadConsultantByEmail(email);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }
 }
