@@ -1,10 +1,14 @@
 package com.apassignment.thejobs.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "appointments")
 public class Appointment {
     @Id
@@ -12,7 +16,8 @@ public class Appointment {
     @Column(name = "appointment_id")
     private Long appointmentId;
 
-    @Column(name = "appointment_date")
+    @Basic
+    @Column(name = "appointment_date", nullable = false)
     private Date appointmentDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
