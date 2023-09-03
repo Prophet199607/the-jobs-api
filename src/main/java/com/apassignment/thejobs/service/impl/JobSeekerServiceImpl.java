@@ -92,6 +92,7 @@ public class JobSeekerServiceImpl implements JobSeekerService {
         }
 
         User user = userService.createUser(new UserDto(jobSeekerDto.getUser().getUserName(),
+                jobSeekerDto.getUser().getFullName(),
                 jobSeekerDto.getUser().getEmail(), jobSeekerDto.getUser().getPassword()));
 
         userService.assignRoleToUser(user.getUserId(), 4L);

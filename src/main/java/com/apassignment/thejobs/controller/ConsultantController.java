@@ -6,6 +6,7 @@ import com.apassignment.thejobs.service.ConsultantService;
 import com.apassignment.thejobs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,6 +16,7 @@ public class ConsultantController {
     private ConsultantService consultantService;
 
     @GetMapping("/all")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSULTANT')")
     public ResponseEntity<ResponseDto> findAllConsultants() {
         ResponseDto responseDto = consultantService.fetchConsultants();
         return new ResponseEntity<>(responseDto, responseDto.getStatus());

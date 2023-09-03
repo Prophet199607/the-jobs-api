@@ -1,6 +1,7 @@
 package com.apassignment.thejobs.service.impl;
 
 import com.apassignment.thejobs.dto.UserDto;
+import com.apassignment.thejobs.dto.UserResponseDto;
 import com.apassignment.thejobs.entity.Role;
 import com.apassignment.thejobs.entity.User;
 import com.apassignment.thejobs.repository.UserRepository;
@@ -37,6 +38,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User loadUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public UserResponseDto findUserByUserName(String userName) {
+        return modelMapper.map(userRepository.findByUserName(userName), UserResponseDto.class);
     }
 
     @Override

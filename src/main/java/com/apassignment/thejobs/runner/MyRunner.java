@@ -89,6 +89,7 @@ public class MyRunner implements CommandLineRunner {
 
         UserDto userDto = new UserDto();
         userDto.setUserName("john");
+        userDto.setFullName("John Doe");
         userDto.setEmail("john@gmail.com");
         userDto.setPassword("1234");
         consultantDto.setUser(userDto);
@@ -113,12 +114,12 @@ public class MyRunner implements CommandLineRunner {
 
     private void createRoles() {
 
-        Arrays.asList("Admin", "Consultant", "Receptionist", "User")
+        Arrays.asList("ROLE_ADMIN", "ROLE_CONSULTANT", "ROLE_RECEPTIONIST", "ROLE_USER")
                 .forEach(role -> roleService.createRole(role));
     }
 
     private void createAdmin() {
-        User admin = userService.createUser(new UserDto("admin", "admin@gmail.com", "1234"));
+        User admin = userService.createUser(new UserDto("admin", "Administrator", "admin@gmail.com", "1234"));
         userService.assignRoleToUser(admin.getUserId(), 1L);
     }
 
@@ -130,6 +131,7 @@ public class MyRunner implements CommandLineRunner {
 
         UserDto userDto = new UserDto();
         userDto.setUserName("tom");
+        userDto.setFullName("Tom Riddle");
         userDto.setEmail("tom@gmail.com");
         userDto.setPassword("456");
         jobSeekerDto.setUser(userDto);

@@ -5,6 +5,7 @@ import com.apassignment.thejobs.dto.ResponseDto;
 import com.apassignment.thejobs.service.JobSeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,6 +15,7 @@ public class JobSeekerController {
     private JobSeekerService jobSeekerService;
 
     @GetMapping("/all")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSULTANT')")
     public ResponseEntity<ResponseDto> findAllJobSeekers() {
         ResponseDto responseDto = jobSeekerService.fetchJobSeekers();
         return new ResponseEntity<>(responseDto, responseDto.getStatus());

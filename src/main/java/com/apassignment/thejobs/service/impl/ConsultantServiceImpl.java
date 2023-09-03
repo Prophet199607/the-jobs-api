@@ -105,6 +105,7 @@ public class ConsultantServiceImpl implements ConsultantService {
         }
 
         User user = userService.createUser(new UserDto(consultantDto.getUser().getUserName(),
+                consultantDto.getUser().getFullName(),
                 consultantDto.getUser().getEmail(), consultantDto.getUser().getPassword()));
 
         userService.assignRoleToUser(user.getUserId(), 2L);

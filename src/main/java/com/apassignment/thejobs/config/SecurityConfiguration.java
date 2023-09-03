@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -23,9 +25,11 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeHttpRequests((authorize) -> authorize.requestMatchers("api/v1/auth/authenticate").permitAll())
-                .authorizeHttpRequests((authorize) -> authorize.requestMatchers( "api/v1/job-seeker/**").authenticated())
+        http.cors().and().csrf().disable();
+        http.authorizeHttpRequests((authorize) -> authorize.requestMatchers("api/v1/auth/authenticate").permitAll())
+                .authorizeHttpRequests((authorize) -> authorize.requestMatchers("api/v1/job-seeker/**").authenticated())
+                .authorizeHttpRequests((authorize) -> authorize.requestMatchers("api/v1/consultant/**").authenticated())
+                .authorizeHttpRequests((authorize) -> authorize.requestMatchers("api/v1/country/**").authenticated())
 //                .authorizeHttpRequests((authorize) -> authorize.requestMatchers( "api/v1/auth/authenticate").permitAll())
 //                .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/**").authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -33,6 +37,19 @@ public class SecurityConfiguration {
 //                .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            public void addCorsMappings(final CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedHeaders("*")
+                        .allowedMethods("*")
+                        .allowedOrigins("*")
+                        .allowCredentials(false);
+            }
+        };
     }
 
 }
