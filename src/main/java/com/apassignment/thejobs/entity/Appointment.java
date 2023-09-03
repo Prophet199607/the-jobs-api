@@ -14,19 +14,19 @@ import java.time.LocalTime;
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "appointment_id", precision = 0)
+    @Column(name = "appointment_id")
     private Long appointmentId;
 
     @Basic
-    @Column(name = "appointment_date", nullable = false, precision = 2)
+    @Column(name = "appointment_date", nullable = false)
     private LocalDate appointmentDate;
 
     @Basic
-    @Column(name = "time_from", nullable = false, precision = 3)
+    @Column(name = "time_from", nullable = false)
     private LocalTime timeFrom;
 
     @Basic
-    @Column(name = "time_to", nullable = false, precision = 4)
+    @Column(name = "time_to", nullable = false)
     private LocalTime timeTo;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,7 +34,7 @@ public class Appointment {
     private Consultant consultant;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "job_seeker_id", referencedColumnName = "job_seeker_id", nullable = false)
+    @JoinColumn(name = "jobSeeker_id", referencedColumnName = "jobSeeker_id", nullable = false)
     private JobSeeker jobSeeker;
 
 }

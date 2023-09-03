@@ -1,16 +1,14 @@
 package com.apassignment.thejobs.service.impl;
 
-import com.apassignment.thejobs.dto.ConsultantDto;
-import com.apassignment.thejobs.dto.JobSeekerDto;
-import com.apassignment.thejobs.dto.ResponseDto;
-import com.apassignment.thejobs.dto.UserDto;
+import com.apassignment.thejobs.dto.*;
+import com.apassignment.thejobs.entity.Appointment;
 import com.apassignment.thejobs.entity.JobSeeker;
 import com.apassignment.thejobs.entity.User;
 import com.apassignment.thejobs.repository.JobSeekerRepository;
+import com.apassignment.thejobs.service.AppointmentService;
 import com.apassignment.thejobs.service.JobSeekerService;
 import com.apassignment.thejobs.service.UserService;
 import com.apassignment.thejobs.util.ResponseType;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,18 +32,20 @@ public class JobSeekerServiceImpl implements JobSeekerService {
     private UserService userService;
 
     @Autowired
+    private AppointmentService appointmentService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Override
     public JobSeeker findJobSeekerById(Long jobSeekerId) {
-        return jobSeekerRepository.findById(jobSeekerId)
-                .orElseThrow(() -> new EntityNotFoundException("Job Seeker not found!"));
+        return jobSeekerRepository.findById(jobSeekerId).orElse(null);
     }
 
     @Override
     public ResponseDto fetchJobSeekers() {
-        List<JobSeekerDto> jobSeekers = jobSeekerRepository.findAll()
-                .stream().map(jobSeeker -> modelMapper.map(jobSeeker, JobSeekerDto.class))
+        List<JobSeekerResponseDto> jobSeekers = jobSeekerRepository.findAll()
+                .stream().map(jobSeeker -> modelMapper.map(jobSeeker, JobSeekerResponseDto.class))
                 .toList();
         return new ResponseDto(
                 ResponseType.SUCCESS,
@@ -60,8 +60,8 @@ public class JobSeekerServiceImpl implements JobSeekerService {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<JobSeeker> jobSeekersByPage = jobSeekerRepository.findJobSeekersByFirstName(name, pageRequest);
 
-        PageImpl<JobSeekerDto> jobSeekerSearchData = new PageImpl<>(jobSeekersByPage.getContent().stream()
-                .map(jobSeeker -> modelMapper.map(jobSeeker, JobSeekerDto.class)).collect(Collectors.toList()),
+        PageImpl<JobSeekerResponseDto> jobSeekerSearchData = new PageImpl<>(jobSeekersByPage.getContent().stream()
+                .map(jobSeeker -> modelMapper.map(jobSeeker, JobSeekerResponseDto.class)).collect(Collectors.toList()),
                 pageRequest, jobSeekersByPage.getTotalElements());
 
         return new ResponseDto(
@@ -75,11 +75,13 @@ public class JobSeekerServiceImpl implements JobSeekerService {
     @Override
     public ResponseDto loadJobSeekerByEmail(String email) {
         JobSeeker jobSeeker = jobSeekerRepository.findJobSeekerByEmail(email);
+        if (jobSeeker == null) return new ResponseDto(ResponseType.DATA_NOT_FOUND,
+                HttpStatus.NOT_FOUND, "No job seeker found with " + email + "!", null);
         return new ResponseDto(
                 ResponseType.SUCCESS,
-                HttpStatus.CREATED,
+                HttpStatus.OK,
                 "Success!",
-                modelMapper.map(jobSeeker, JobSeekerDto.class)
+                modelMapper.map(jobSeeker, JobSeekerResponseDto.class)
         );
     }
 
@@ -103,17 +105,46 @@ public class JobSeekerServiceImpl implements JobSeekerService {
                 ResponseType.SUCCESS,
                 HttpStatus.CREATED,
                 "Job Seeker has been saved successfully!",
-                modelMapper.map(savedJobSeeker, JobSeekerDto.class)
+                modelMapper.map(savedJobSeeker, JobSeekerResponseDto.class)
         );
     }
 
     @Override
     public ResponseDto updateJobSeeker(JobSeekerDto jobSeekerDto) {
-        return null;
+        JobSeeker loadedJobSeeker = findJobSeekerById(jobSeekerDto.getJobSeekerId());
+        if (loadedJobSeeker == null) return new ResponseDto(ResponseType.DATA_NOT_FOUND,
+                HttpStatus.NOT_FOUND, "No job seeker found!", null);
+
+        JobSeeker jobSeeker = modelMapper.map(jobSeekerDto, JobSeeker.class);
+        jobSeeker.setUser(loadedJobSeeker.getUser());
+
+        JobSeeker updatedJobSeeker = jobSeekerRepository.save(jobSeeker);
+
+        return new ResponseDto(
+                ResponseType.SUCCESS,
+                HttpStatus.OK,
+                "Job Seeker has been saved successfully!",
+                modelMapper.map(updatedJobSeeker, JobSeekerResponseDto.class)
+        );
     }
 
     @Override
     public ResponseDto removeJobSeeker(Long jobSeekerId) {
-        return null;
+        JobSeeker jobSeeker = findJobSeekerById(jobSeekerId);
+        if (jobSeeker == null) return new ResponseDto(ResponseType.DATA_NOT_FOUND,
+                HttpStatus.NOT_FOUND, "No job seeker found with ID " + jobSeekerId + "!", null);
+
+        List<Appointment> appointments = appointmentService.loadAppointmentsByJobSeeker(jobSeekerId);
+        appointmentService.deleteAllAppointments(appointments);
+
+        jobSeekerRepository.deleteById(jobSeekerId);
+
+        return new ResponseDto(
+                ResponseType.SUCCESS,
+                HttpStatus.OK,
+                "Job Seeker has been deleted successfully!",
+                modelMapper.map(jobSeeker, JobSeekerResponseDto.class)
+        );
+
     }
 }

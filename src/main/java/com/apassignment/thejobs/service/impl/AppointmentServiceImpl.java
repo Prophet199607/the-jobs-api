@@ -1,7 +1,6 @@
 package com.apassignment.thejobs.service.impl;
 
 import com.apassignment.thejobs.dto.AppointmentDto;
-import com.apassignment.thejobs.dto.ConsultantDto;
 import com.apassignment.thejobs.dto.ResponseDto;
 import com.apassignment.thejobs.entity.Appointment;
 import com.apassignment.thejobs.entity.Consultant;
@@ -15,6 +14,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -48,5 +49,20 @@ public class AppointmentServiceImpl implements AppointmentService {
                 "Appointment has been saved successfully!",
                 modelMapper.map(savedAppointment, AppointmentDto.class)
         );
+    }
+
+    @Override
+    public void removeAppointment(Long appointmentId) {
+        appointmentRepository.deleteById(appointmentId);
+    }
+
+    @Override
+    public List<Appointment> loadAppointmentsByJobSeeker(Long jobSeekerId) {
+        return appointmentRepository.findByJobSeekerJobSeekerId(jobSeekerId);
+    }
+
+    @Override
+    public void deleteAllAppointments(List<Appointment> appointments) {
+        appointmentRepository.deleteAll(appointments);
     }
 }

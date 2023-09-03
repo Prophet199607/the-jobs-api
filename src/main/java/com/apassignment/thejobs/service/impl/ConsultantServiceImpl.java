@@ -1,13 +1,13 @@
 package com.apassignment.thejobs.service.impl;
 
 import com.apassignment.thejobs.dto.ConsultantDto;
+import com.apassignment.thejobs.dto.ConsultantResponseDto;
 import com.apassignment.thejobs.dto.ResponseDto;
 import com.apassignment.thejobs.dto.UserDto;
 import com.apassignment.thejobs.entity.*;
 import com.apassignment.thejobs.mapper.ConsultantMapper;
-import com.apassignment.thejobs.mapper.CountryMapper;
-import com.apassignment.thejobs.mapper.JobTypeMapper;
 import com.apassignment.thejobs.repository.ConsultantRepository;
+import com.apassignment.thejobs.service.AppointmentService;
 import com.apassignment.thejobs.service.ConsultantService;
 import com.apassignment.thejobs.service.UserService;
 import com.apassignment.thejobs.util.ResponseType;
@@ -19,7 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,18 +38,21 @@ public class ConsultantServiceImpl implements ConsultantService {
     private UserService userService;
 
     @Autowired
+    private AppointmentService appointmentService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Override
     public Consultant findConsultantById(Long consultantId) {
-        return consultantRepository.findById(consultantId)
-                .orElseThrow(() -> new EntityNotFoundException("Consultant not found!"));
+        return consultantRepository.findById(consultantId).orElse(null);
+
     }
 
     @Override
     public ResponseDto fetchConsultants() {
-        List<ConsultantDto> consultants = consultantRepository.findAll()
-                .stream().map(consultant -> modelMapper.map(consultant, ConsultantDto.class))
+        List<ConsultantResponseDto> consultants = consultantRepository.findAll()
+                .stream().map(consultant -> modelMapper.map(consultant, ConsultantResponseDto.class))
                 .collect(Collectors.toList());
         return new ResponseDto(
                 ResponseType.SUCCESS,
@@ -65,8 +67,8 @@ public class ConsultantServiceImpl implements ConsultantService {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Consultant> consultantsPage = consultantRepository.findConsultantsByFirstName(name, pageRequest);
 
-        PageImpl<ConsultantDto> consultantSearchData = new PageImpl<>(consultantsPage.getContent().stream()
-                .map(consultant -> modelMapper.map(consultant, ConsultantDto.class))
+        PageImpl<ConsultantResponseDto> consultantSearchData = new PageImpl<>(consultantsPage.getContent().stream()
+                .map(consultant -> modelMapper.map(consultant, ConsultantResponseDto.class))
                 .collect(Collectors.toList()), pageRequest, consultantsPage.getTotalElements());
 
         return new ResponseDto(
@@ -80,17 +82,24 @@ public class ConsultantServiceImpl implements ConsultantService {
     @Override
     public ResponseDto loadConsultantByEmail(String email) {
         Consultant consultant = consultantRepository.findConsultantsByEmail(email);
+        if (consultant == null) return new ResponseDto(ResponseType.DATA_NOT_FOUND,
+                HttpStatus.NOT_FOUND, "No consultant found with " + email + "!", null);
         return new ResponseDto(
                 ResponseType.SUCCESS,
-                HttpStatus.CREATED,
+                HttpStatus.OK,
                 "Success!",
-                modelMapper.map(consultant, ConsultantDto.class)
+                modelMapper.map(consultant, ConsultantResponseDto.class)
         );
     }
 
     @Override
     public ResponseDto createConsultant(ConsultantDto consultantDto) {
-        /* check whether the email is duplicate or not **/
+        /* check whether the email is duplicate or not in the user table **/
+        User loadedUser = userService.loadUserByEmail(consultantDto.getUser().getEmail());
+        if (loadedUser != null) {
+            return new ResponseDto(ResponseType.DUPLICATE_ENTRY, HttpStatus.CONFLICT, "Duplicate user email found!", null);
+        }
+
         if (consultantRepository.existsByEmail(consultantDto.getEmail())) {
             return new ResponseDto(ResponseType.DUPLICATE_ENTRY, HttpStatus.CONFLICT, "Duplicate email found!", null);
         }
@@ -113,7 +122,7 @@ public class ConsultantServiceImpl implements ConsultantService {
                 ResponseType.SUCCESS,
                 HttpStatus.CREATED,
                 "Consultant has been saved successfully!",
-                modelMapper.map(savedConsultant, ConsultantDto.class)
+                modelMapper.map(savedConsultant, ConsultantResponseDto.class)
         );
     }
 
@@ -128,24 +137,26 @@ public class ConsultantServiceImpl implements ConsultantService {
                 ResponseType.SUCCESS,
                 HttpStatus.OK,
                 "Consultant has been updated successfully!",
-                modelMapper.map(updatedConsultant, ConsultantDto.class)
+                modelMapper.map(updatedConsultant, ConsultantResponseDto.class)
         );
     }
 
     @Override
     public ResponseDto removeConsultant(Long consultantId) {
         Consultant consultant = findConsultantById(consultantId);
-        //:TODO uncomment this line after creating appointment service
-//        for (Appointment appointment: consultant.getAppointments()) {
-//            appointment.removeAppointment(appointment.getAppointmentId());
-//        }
+        if (consultant == null) return new ResponseDto(ResponseType.DATA_NOT_FOUND,
+                HttpStatus.NOT_FOUND, "No consultant found with ID " + consultantId + "!", null);
+
+        for (Appointment appointment : consultant.getAppointments()) {
+            appointmentService.removeAppointment(appointment.getAppointmentId());
+        }
         consultantRepository.deleteById(consultantId);
 
         return new ResponseDto(
                 ResponseType.SUCCESS,
                 HttpStatus.OK,
                 "Consultant has been deleted successfully!",
-                modelMapper.map(consultant, ConsultantDto.class)
+                modelMapper.map(consultant, ConsultantResponseDto.class)
         );
 
     }

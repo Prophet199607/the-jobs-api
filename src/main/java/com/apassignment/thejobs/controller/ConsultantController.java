@@ -3,8 +3,8 @@ package com.apassignment.thejobs.controller;
 import com.apassignment.thejobs.dto.ConsultantDto;
 import com.apassignment.thejobs.dto.ResponseDto;
 import com.apassignment.thejobs.service.ConsultantService;
+import com.apassignment.thejobs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

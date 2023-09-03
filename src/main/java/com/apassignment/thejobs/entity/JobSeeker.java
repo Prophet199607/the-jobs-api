@@ -1,5 +1,6 @@
 package com.apassignment.thejobs.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,8 +19,8 @@ import java.util.Set;
 public class JobSeeker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "job_seeker_id", nullable = false)
-    private Long JobSeekerId;
+    @Column(name = "jobSeeker_id", nullable = false)
+    private Long jobSeekerId;
 
     @Basic
     @Column(name = "first_name", nullable = false)
@@ -33,10 +34,11 @@ public class JobSeeker {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "jobSeeker", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "jobSeeker", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<Appointment> appointments = new HashSet<>();
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 

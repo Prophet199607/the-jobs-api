@@ -12,9 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ConsultantRepository extends JpaRepository<Consultant, Long> {
     Boolean existsByEmail(@Param("email") String email);
-
     Consultant findConsultantsByEmail(String email);
-
     @Query(value = "select c from Consultant as c where c.firstName like %:name% or c.lastName like %:name%")
     Page<Consultant> findConsultantsByFirstName(@Param("name") String name, PageRequest pageRequest);
 }

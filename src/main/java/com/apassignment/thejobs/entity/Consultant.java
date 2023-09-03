@@ -37,7 +37,7 @@ public class Consultant {
     @Column(name = "is_available", nullable = false)
     private Boolean isAvailable;
 
-    @OneToMany(mappedBy = "consultant", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "consultant", fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     private Set<Appointment> appointments = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
