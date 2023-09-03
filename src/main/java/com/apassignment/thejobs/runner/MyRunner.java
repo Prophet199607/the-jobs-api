@@ -2,15 +2,14 @@ package com.apassignment.thejobs.runner;
 
 import com.apassignment.thejobs.dto.AppointmentDto;
 import com.apassignment.thejobs.dto.ConsultantDto;
+import com.apassignment.thejobs.dto.UserDto;
 import com.apassignment.thejobs.entity.Consultant;
 import com.apassignment.thejobs.entity.Country;
 import com.apassignment.thejobs.entity.JobType;
+import com.apassignment.thejobs.entity.User;
 import com.apassignment.thejobs.mapper.CountryMapper;
 import com.apassignment.thejobs.mapper.JobTypeMapper;
-import com.apassignment.thejobs.service.AppointmentService;
-import com.apassignment.thejobs.service.ConsultantService;
-import com.apassignment.thejobs.service.CountryService;
-import com.apassignment.thejobs.service.JobTypeService;
+import com.apassignment.thejobs.service.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -37,6 +36,12 @@ public class MyRunner implements CommandLineRunner {
     private AppointmentService appointmentService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
     private CountryMapper countryMapper;
 
     @Autowired
@@ -51,7 +56,10 @@ public class MyRunner implements CommandLineRunner {
         createJobTypes();
         createConsultant();
         createAppointment();
+        createRoles();
+        createAdmin();
     }
+
 
     private void createCountries() {
         Arrays.asList("Australia", "USA", "Canada", "Japan", "Korea", "New Zealand", "UK", "Russia", "Germany")
@@ -89,7 +97,17 @@ public class MyRunner implements CommandLineRunner {
         appointmentDto.setConsultant(modelMapper.map(consultant, ConsultantDto.class));
 
         appointmentService.createAppointment(appointmentDto);
+    }
 
+    private void createRoles() {
+
+        Arrays.asList("Admin", "Consultant", "Receptionist", "User")
+                .forEach(role -> roleService.createRole(role));
+    }
+
+    private void createAdmin() {
+        User admin = userService.createUser(new UserDto("admin", "admin@gmail.com", "1234"));
+        userService.assignRoleToUser(admin.getUserId(), 1L);
     }
 
 }
