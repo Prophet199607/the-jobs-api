@@ -2,11 +2,9 @@ package com.apassignment.thejobs.runner;
 
 import com.apassignment.thejobs.dto.AppointmentDto;
 import com.apassignment.thejobs.dto.ConsultantDto;
+import com.apassignment.thejobs.dto.JobSeekerDto;
 import com.apassignment.thejobs.dto.UserDto;
-import com.apassignment.thejobs.entity.Consultant;
-import com.apassignment.thejobs.entity.Country;
-import com.apassignment.thejobs.entity.JobType;
-import com.apassignment.thejobs.entity.User;
+import com.apassignment.thejobs.entity.*;
 import com.apassignment.thejobs.mapper.CountryMapper;
 import com.apassignment.thejobs.mapper.JobTypeMapper;
 import com.apassignment.thejobs.service.*;
@@ -33,6 +31,9 @@ public class MyRunner implements CommandLineRunner {
     private ConsultantService consultantService;
 
     @Autowired
+    private JobSeekerService jobSeekerService;
+
+    @Autowired
     private AppointmentService appointmentService;
 
     @Autowired
@@ -54,10 +55,12 @@ public class MyRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
         createCountries();
         createJobTypes();
-        createConsultant();
-        createAppointment();
         createRoles();
         createAdmin();
+        createConsultant();
+        createJobSeeker();
+        createAppointment();
+
     }
 
 
@@ -73,7 +76,7 @@ public class MyRunner implements CommandLineRunner {
 
     private void createConsultant() {
         ConsultantDto consultantDto = new ConsultantDto();
-        consultantDto.setEmail("pasindu@gmail.com");
+        consultantDto.setEmail("john@gmail.com");
         consultantDto.setFirstName("John");
         consultantDto.setLastName("Doe");
         consultantDto.setIsAvailable(true);
@@ -83,6 +86,12 @@ public class MyRunner implements CommandLineRunner {
 
         JobType jobType = jobTypeService.loadJobTypeById(1L);
         consultantDto.setJobType(jobTypeMapper.fromJobType(jobType));
+
+        UserDto userDto = new UserDto();
+        userDto.setUserName("john");
+        userDto.setEmail("john@gmail.com");
+        userDto.setPassword("1234");
+        consultantDto.setUser(userDto);
 
         consultantService.createConsultant(consultantDto);
     }
@@ -96,6 +105,9 @@ public class MyRunner implements CommandLineRunner {
         Consultant consultant = consultantService.findConsultantById(1L);
         appointmentDto.setConsultant(modelMapper.map(consultant, ConsultantDto.class));
 
+        JobSeeker jobSeeker = jobSeekerService.findJobSeekerById(1L);
+        appointmentDto.setJobSeeker(modelMapper.map(jobSeeker, JobSeekerDto.class));
+
         appointmentService.createAppointment(appointmentDto);
     }
 
@@ -108,6 +120,22 @@ public class MyRunner implements CommandLineRunner {
     private void createAdmin() {
         User admin = userService.createUser(new UserDto("admin", "admin@gmail.com", "1234"));
         userService.assignRoleToUser(admin.getUserId(), 1L);
+    }
+
+    private void createJobSeeker() {
+        JobSeekerDto jobSeekerDto = new JobSeekerDto();
+        jobSeekerDto.setEmail("tom@gmail.com");
+        jobSeekerDto.setFirstName("Tom");
+        jobSeekerDto.setLastName("Riddle");
+
+        UserDto userDto = new UserDto();
+        userDto.setUserName("tom");
+        userDto.setEmail("tom@gmail.com");
+        userDto.setPassword("456");
+        jobSeekerDto.setUser(userDto);
+
+        jobSeekerService.createJobSeeker(jobSeekerDto);
+
     }
 
 }

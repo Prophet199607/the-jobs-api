@@ -3,13 +3,10 @@ package com.apassignment.thejobs.dto;
 import lombok.Data;
 
 @Data
-public class ConsultantDto {
-    private Long consultantId;
+public class JobSeekerDto {
+    private Long JobSeekerId;
     private String firstName;
     private String lastName;
     private String email;
-    private Boolean isAvailable;
-    private CountryDto country;
-    private JobTypeDto jobType;
     private UserDto user;
 }

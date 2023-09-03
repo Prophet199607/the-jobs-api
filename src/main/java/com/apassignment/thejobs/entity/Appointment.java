@@ -33,4 +33,8 @@ public class Appointment {
     @JoinColumn(name = "consultant_id", referencedColumnName = "consultant_id", nullable = false)
     private Consultant consultant;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_seeker_id", referencedColumnName = "job_seeker_id", nullable = false)
+    private JobSeeker jobSeeker;
+
 }

@@ -11,4 +11,5 @@ public class AppointmentDto {
     private LocalTime timeFrom;
     private LocalTime timeTo;
     private ConsultantDto consultant;
+    private JobSeekerDto jobSeeker;
 }

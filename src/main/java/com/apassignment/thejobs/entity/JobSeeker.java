@@ -14,12 +14,12 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "consultants")
-public class Consultant {
+@Table(name = "job_seekers")
+public class JobSeeker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "consultant_id", nullable = false)
-    private Long consultantId;
+    @Column(name = "job_seeker_id", nullable = false)
+    private Long JobSeekerId;
 
     @Basic
     @Column(name = "first_name", nullable = false)
@@ -33,20 +33,8 @@ public class Consultant {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Basic
-    @Column(name = "is_available", nullable = false)
-    private Boolean isAvailable;
-
-    @OneToMany(mappedBy = "consultant", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "jobSeeker", fetch = FetchType.LAZY)
     private Set<Appointment> appointments = new HashSet<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", referencedColumnName = "country_id")
-    private Country country;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "jobtype_id", referencedColumnName = "jobtype_id", nullable = false)
-    private JobType jobType;
 
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)

@@ -2,15 +2,14 @@ package com.apassignment.thejobs.service.impl;
 
 import com.apassignment.thejobs.dto.ConsultantDto;
 import com.apassignment.thejobs.dto.ResponseDto;
-import com.apassignment.thejobs.entity.Appointment;
-import com.apassignment.thejobs.entity.Consultant;
-import com.apassignment.thejobs.entity.Country;
-import com.apassignment.thejobs.entity.JobType;
+import com.apassignment.thejobs.dto.UserDto;
+import com.apassignment.thejobs.entity.*;
 import com.apassignment.thejobs.mapper.ConsultantMapper;
 import com.apassignment.thejobs.mapper.CountryMapper;
 import com.apassignment.thejobs.mapper.JobTypeMapper;
 import com.apassignment.thejobs.repository.ConsultantRepository;
 import com.apassignment.thejobs.service.ConsultantService;
+import com.apassignment.thejobs.service.UserService;
 import com.apassignment.thejobs.util.ResponseType;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -35,6 +34,9 @@ public class ConsultantServiceImpl implements ConsultantService {
 
     @Autowired
     private ConsultantMapper consultantMapper;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -93,7 +95,13 @@ public class ConsultantServiceImpl implements ConsultantService {
             return new ResponseDto(ResponseType.DUPLICATE_ENTRY, HttpStatus.CONFLICT, "Duplicate email found!", null);
         }
 
+        User user = userService.createUser(new UserDto(consultantDto.getUser().getUserName(),
+                consultantDto.getUser().getEmail(), consultantDto.getUser().getPassword()));
+
+        userService.assignRoleToUser(user.getUserId(), 2L);
+
         Consultant consultant = consultantMapper.fromConsultantDto(consultantDto);
+        consultant.setUser(user);
         Country country = modelMapper.map(consultantDto.getCountry(), Country.class);
         JobType jobType = modelMapper.map(consultantDto.getJobType(), JobType.class);
         consultant.setCountry(country);
