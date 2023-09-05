@@ -46,7 +46,11 @@ public class ConsultantServiceImpl implements ConsultantService {
     @Override
     public Consultant findConsultantById(Long consultantId) {
         return consultantRepository.findById(consultantId).orElse(null);
+    }
 
+    @Override
+    public Consultant findConsultantByUser(Long userId) {
+        return consultantRepository.findConsultantByUserId(userId);
     }
 
     @Override
@@ -71,6 +75,23 @@ public class ConsultantServiceImpl implements ConsultantService {
                 HttpStatus.OK,
                 "Success",
                 consultants
+        );
+    }
+
+    @Override
+    public ResponseDto fetchAllConsultantsWithPagination(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Consultant> allConsultantsWithPagination = consultantRepository.getAllConsultantsWithPagination(pageRequest);
+
+        PageImpl<ConsultantResponseDto> consultantResponseDtos = new PageImpl<>(allConsultantsWithPagination.getContent().stream()
+                .map(consultant -> modelMapper.map(consultant, ConsultantResponseDto.class))
+                .collect(Collectors.toList()), pageRequest, allConsultantsWithPagination.getTotalElements());
+
+        return new ResponseDto(
+                ResponseType.SUCCESS,
+                HttpStatus.OK,
+                "Success",
+                consultantResponseDtos
         );
     }
 

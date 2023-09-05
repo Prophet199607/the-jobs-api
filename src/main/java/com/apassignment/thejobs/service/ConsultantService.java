@@ -6,10 +6,13 @@ import com.apassignment.thejobs.entity.Consultant;
 
 public interface ConsultantService {
     Consultant findConsultantById(Long consultantId);
+    Consultant findConsultantByUser(Long userId);
 
     ResponseDto fetchConsultantById(Long consultantId);
 
     ResponseDto fetchConsultants();
+
+    ResponseDto fetchAllConsultantsWithPagination(int page, int size);
 
     ResponseDto findConsultantsByName(String name, int page, int size);
 

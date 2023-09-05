@@ -60,4 +60,7 @@ public class Consultant {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
+    @OneToMany(mappedBy = "consultant", fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    private Set<Schedule> schedules = new HashSet<>();
+
 }

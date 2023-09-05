@@ -15,4 +15,9 @@ public interface ConsultantRepository extends JpaRepository<Consultant, Long> {
     Consultant findConsultantsByEmail(String email);
     @Query(value = "select c from Consultant as c where c.firstName like %:name% or c.lastName like %:name%")
     Page<Consultant> findConsultantsByFirstName(@Param("name") String name, PageRequest pageRequest);
+    @Query(value = "select c from Consultant c")
+    Page<Consultant> getAllConsultantsWithPagination(PageRequest pageRequest);
+
+    @Query(value = "select c.* from consultants as c where c.user_id=:userId", nativeQuery = true)
+    Consultant findConsultantByUserId(@Param("userId") Long userId);
 }

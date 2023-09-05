@@ -22,13 +22,23 @@ public class ConsultantController {
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }
 
+    @GetMapping("/all/paginate")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSULTANT')")
+    public ResponseEntity<ResponseDto> findAllConsultantsWithPaginate(
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size
+    ) {
+        ResponseDto responseDto = consultantService.fetchAllConsultantsWithPagination(page - 1, size);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
+
     @GetMapping
     public ResponseEntity<ResponseDto> searchConsultant(
             @RequestParam(name = "keyword", defaultValue = "") String keyword,
-            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "5") int size
     ) {
-        ResponseDto consultantsByName = consultantService.findConsultantsByName(keyword, page, size);
+        ResponseDto consultantsByName = consultantService.findConsultantsByName(keyword, page - 1, size);
         return new ResponseEntity<>(consultantsByName, consultantsByName.getStatus());
     }
 

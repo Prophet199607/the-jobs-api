@@ -129,6 +129,8 @@ public class MyRunner implements CommandLineRunner {
         jobSeekerDto.setEmail("tom@gmail.com");
         jobSeekerDto.setFirstName("Tom");
         jobSeekerDto.setLastName("Riddle");
+        jobSeekerDto.setContactNumber("0712381996");
+        jobSeekerDto.setIsActive(true);
 
         UserDto userDto = new UserDto();
         userDto.setUserName("tom");
