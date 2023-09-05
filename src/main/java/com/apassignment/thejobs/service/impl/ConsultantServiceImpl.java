@@ -50,6 +50,18 @@ public class ConsultantServiceImpl implements ConsultantService {
     }
 
     @Override
+    public ResponseDto fetchConsultantById(Long consultantId) {
+        Consultant consultant = consultantRepository.findById(consultantId)
+                .orElseThrow(() -> new EntityNotFoundException("Consultant with ID " + consultantId + " not found"));
+        return new ResponseDto(
+                ResponseType.SUCCESS,
+                HttpStatus.OK,
+                "Success",
+                modelMapper.map(consultant, ConsultantResponseDto.class)
+        );
+    }
+
+    @Override
     public ResponseDto fetchConsultants() {
         List<ConsultantResponseDto> consultants = consultantRepository.findAll()
                 .stream().map(consultant -> modelMapper.map(consultant, ConsultantResponseDto.class))
@@ -131,8 +143,9 @@ public class ConsultantServiceImpl implements ConsultantService {
     public ResponseDto updateConsultant(ConsultantDto consultantDto) {
         Consultant loadedConsultant = findConsultantById(consultantDto.getConsultantId());
         Consultant consultant = modelMapper.map(consultantDto, Consultant.class);
-        consultant.setJobType(loadedConsultant.getJobType());
-        consultant.setCountry(loadedConsultant.getCountry());
+//        consultant.setJobType(loadedConsultant.getJobType());
+//        consultant.setCountry(loadedConsultant.getCountry());
+        consultant.setUser(loadedConsultant.getUser());
         Consultant updatedConsultant = consultantRepository.save(consultant);
         return new ResponseDto(
                 ResponseType.SUCCESS,

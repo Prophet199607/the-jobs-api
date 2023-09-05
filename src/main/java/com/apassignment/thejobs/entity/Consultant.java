@@ -34,6 +34,14 @@ public class Consultant {
     private String email;
 
     @Basic
+    @Column(name = "contact_number", nullable = false)
+    private String contactNumber;
+
+    @Basic
+    @Column(name = "remark", nullable = true)
+    private String remark;
+
+    @Basic
     @Column(name = "is_available", nullable = false)
     private Boolean isAvailable;
 

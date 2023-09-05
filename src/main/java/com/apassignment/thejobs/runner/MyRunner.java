@@ -79,6 +79,7 @@ public class MyRunner implements CommandLineRunner {
         consultantDto.setEmail("john@gmail.com");
         consultantDto.setFirstName("John");
         consultantDto.setLastName("Doe");
+        consultantDto.setContactNumber("0712381996");
         consultantDto.setIsAvailable(true);
 
         Country country = countryService.loadCountryById(7L);

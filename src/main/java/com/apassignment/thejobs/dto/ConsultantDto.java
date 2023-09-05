@@ -9,6 +9,8 @@ public class ConsultantDto {
     private String firstName;
     private String lastName;
     private String email;
+    private String contactNumber;
+    private String remark;
     private Boolean isAvailable;
     private CountryDto country;
     private JobTypeDto jobType;

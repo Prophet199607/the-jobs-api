@@ -30,6 +30,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests((authorize) -> authorize.requestMatchers("api/v1/job-seeker/**").authenticated())
                 .authorizeHttpRequests((authorize) -> authorize.requestMatchers("api/v1/consultant/**").authenticated())
                 .authorizeHttpRequests((authorize) -> authorize.requestMatchers("api/v1/country/**").authenticated())
+                .authorizeHttpRequests((authorize) -> authorize.requestMatchers("api/v1/job-type/**").authenticated())
 //                .authorizeHttpRequests((authorize) -> authorize.requestMatchers( "api/v1/auth/authenticate").permitAll())
 //                .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/**").authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

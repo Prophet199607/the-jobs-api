@@ -56,4 +56,10 @@ public class ConsultantController {
         ResponseDto responseDto = consultantService.loadConsultantByEmail(email);
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }
+
+    @GetMapping("/findById/{consultantId}")
+    public ResponseEntity<ResponseDto> loadConsultantByEmail(@PathVariable Long consultantId) {
+        ResponseDto responseDto = consultantService.fetchConsultantById(consultantId);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
 }
