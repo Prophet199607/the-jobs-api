@@ -2,6 +2,7 @@ package com.apassignment.thejobs.service.impl;
 
 import com.apassignment.thejobs.dto.*;
 import com.apassignment.thejobs.entity.Appointment;
+import com.apassignment.thejobs.entity.Consultant;
 import com.apassignment.thejobs.entity.JobSeeker;
 import com.apassignment.thejobs.entity.User;
 import com.apassignment.thejobs.repository.JobSeekerRepository;
@@ -9,6 +10,7 @@ import com.apassignment.thejobs.service.AppointmentService;
 import com.apassignment.thejobs.service.JobSeekerService;
 import com.apassignment.thejobs.service.UserService;
 import com.apassignment.thejobs.util.ResponseType;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,18 @@ public class JobSeekerServiceImpl implements JobSeekerService {
     }
 
     @Override
+    public ResponseDto fetchJobSeekerById(Long jobSeekerId) {
+        JobSeeker jobSeeker = jobSeekerRepository.findById(jobSeekerId)
+                .orElseThrow(() -> new EntityNotFoundException("Consultant with ID " + jobSeekerId + " not found"));
+        return new ResponseDto(
+                ResponseType.SUCCESS,
+                HttpStatus.OK,
+                "Success",
+                modelMapper.map(jobSeeker, JobSeekerResponseDto.class)
+        );
+    }
+
+    @Override
     public ResponseDto fetchJobSeekers() {
         List<JobSeekerResponseDto> jobSeekers = jobSeekerRepository.findAll()
                 .stream().map(jobSeeker -> modelMapper.map(jobSeeker, JobSeekerResponseDto.class))
@@ -52,6 +66,23 @@ public class JobSeekerServiceImpl implements JobSeekerService {
                 HttpStatus.OK,
                 "Success",
                 jobSeekers
+        );
+    }
+
+    @Override
+    public ResponseDto fetchAllJobSeekersWithPagination(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<JobSeeker> allJobSeekersWithPagination = jobSeekerRepository.getAllJobSeekersWithPagination(pageRequest);
+
+        PageImpl<JobSeekerResponseDto> jobSeekerResponseDtos = new PageImpl<>(allJobSeekersWithPagination.getContent().stream()
+                .map(jobSeeker -> modelMapper.map(jobSeeker, JobSeekerResponseDto.class))
+                .collect(Collectors.toList()), pageRequest, allJobSeekersWithPagination.getTotalElements());
+
+        return new ResponseDto(
+                ResponseType.SUCCESS,
+                HttpStatus.OK,
+                "Success",
+                jobSeekerResponseDtos
         );
     }
 

@@ -7,7 +7,11 @@ import com.apassignment.thejobs.entity.JobSeeker;
 public interface JobSeekerService {
     JobSeeker findJobSeekerById(Long jobSeekerId);
 
+    ResponseDto fetchJobSeekerById(Long consultantId);
+
     ResponseDto fetchJobSeekers();
+
+    ResponseDto fetchAllJobSeekersWithPagination(int page, int size);
 
     ResponseDto findJobSeekersByName(String name, int page, int size);
 

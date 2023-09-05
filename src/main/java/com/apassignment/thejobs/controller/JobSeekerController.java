@@ -21,13 +21,23 @@ public class JobSeekerController {
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }
 
+    @GetMapping("/all/paginate")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSULTANT')")
+    public ResponseEntity<ResponseDto> findJobSeekersWithPaginate(
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size
+    ) {
+        ResponseDto responseDto = jobSeekerService.fetchAllJobSeekersWithPagination(page - 1, size);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
+
     @GetMapping
     public ResponseEntity<ResponseDto> searchJobSeekers(
             @RequestParam(name = "keyword", defaultValue = "") String keyword,
-            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "5") int size
     ) {
-        ResponseDto consultantsByName = jobSeekerService.findJobSeekersByName(keyword, page, size);
+        ResponseDto consultantsByName = jobSeekerService.findJobSeekersByName(keyword, page - 1, size);
         return new ResponseEntity<>(consultantsByName, consultantsByName.getStatus());
     }
 
@@ -51,8 +61,14 @@ public class JobSeekerController {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<ResponseDto> loadConsultantByEmail(@RequestParam(name = "email", defaultValue = "") String email) {
+    public ResponseEntity<ResponseDto> loadJobSeekerByEmail(@RequestParam(name = "email", defaultValue = "") String email) {
         ResponseDto responseDto = jobSeekerService.loadJobSeekerByEmail(email);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
+
+    @GetMapping("/findById/{jobSeekerId}")
+    public ResponseEntity<ResponseDto> loadJobSeekerByEmail(@PathVariable Long jobSeekerId) {
+        ResponseDto responseDto = jobSeekerService.fetchJobSeekerById(jobSeekerId);
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }
 }

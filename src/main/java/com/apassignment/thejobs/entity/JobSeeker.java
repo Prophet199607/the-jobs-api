@@ -34,6 +34,18 @@ public class JobSeeker {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Basic
+    @Column(name = "contact_number", nullable = false)
+    private String contactNumber;
+
+    @Basic
+    @Column(name = "remark", nullable = true)
+    private String remark;
+
+    @Basic
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
+
     @OneToMany(mappedBy = "jobSeeker", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<Appointment> appointments = new HashSet<>();
 
