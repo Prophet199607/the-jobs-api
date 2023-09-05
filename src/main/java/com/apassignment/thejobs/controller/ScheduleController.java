@@ -1,0 +1,32 @@
+package com.apassignment.thejobs.controller;
+
+import com.apassignment.thejobs.dto.ResponseDto;
+import com.apassignment.thejobs.dto.ScheduleDto;
+import com.apassignment.thejobs.service.ScheduleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
+
+@RestController
+@RequestMapping("/api/v1/schedule")
+public class ScheduleController {
+
+    @Autowired
+    private ScheduleService scheduleService;
+    @PostMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSULTANT')")
+    public ResponseEntity<ResponseDto> createConsultant(@RequestBody ScheduleDto scheduleDto) {
+        ResponseDto responseDto = scheduleService.createSchedule(scheduleDto);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
+
+    @GetMapping("/{consultantId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSULTANT')")
+    public ResponseEntity<ResponseDto> loadSchedulesByConsultant(@PathVariable Long consultantId) {
+        ResponseDto responseDto = scheduleService.loadSchedulesByConsultant(consultantId);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
+}
