@@ -17,7 +17,7 @@ public class CountryController {
     private CountryService countryService;
 
     @GetMapping("/all")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSULTANT')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSULTANT', 'ROLE_USER')")
     public ResponseEntity<ResponseDto> findAllConsultants() {
         ResponseDto responseDto = countryService.fetchCountries();
         return new ResponseEntity<>(responseDto, responseDto.getStatus());

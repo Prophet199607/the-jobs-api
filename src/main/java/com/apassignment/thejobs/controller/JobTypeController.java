@@ -17,7 +17,7 @@ public class JobTypeController {
     private JobTypeService jobTypeService;
 
     @GetMapping("/all")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSULTANT')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSULTANT', 'ROLE_USER')")
     public ResponseEntity<ResponseDto> findAllConsultants() {
         ResponseDto responseDto = jobTypeService.fetchJobTypes();
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
