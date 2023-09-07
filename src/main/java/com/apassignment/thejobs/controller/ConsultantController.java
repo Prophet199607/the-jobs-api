@@ -2,6 +2,7 @@ package com.apassignment.thejobs.controller;
 
 import com.apassignment.thejobs.dto.ConsultantDto;
 import com.apassignment.thejobs.dto.ResponseDto;
+import com.apassignment.thejobs.entity.Consultant;
 import com.apassignment.thejobs.service.ConsultantService;
 import com.apassignment.thejobs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class ConsultantController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDto> createConsultant(@RequestBody ConsultantDto consultantDto) {
+    public ResponseEntity<ResponseDto> createConsultant(@RequestBody Consultant consultantDto) {
         ResponseDto responseDto = consultantService.createConsultant(consultantDto);
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }

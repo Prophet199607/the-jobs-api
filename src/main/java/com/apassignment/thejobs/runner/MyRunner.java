@@ -75,7 +75,7 @@ public class MyRunner implements CommandLineRunner {
     }
 
     private void createConsultant() {
-        ConsultantDto consultantDto = new ConsultantDto();
+        Consultant consultantDto = new Consultant();
         consultantDto.setEmail("john@gmail.com");
         consultantDto.setFirstName("John");
         consultantDto.setLastName("Doe");
@@ -83,12 +83,12 @@ public class MyRunner implements CommandLineRunner {
         consultantDto.setIsAvailable(true);
 
         Country country = countryService.loadCountryById(7L);
-        consultantDto.setCountry(countryMapper.fromCountry(country));
+        consultantDto.setCountry(country);
 
         JobType jobType = jobTypeService.loadJobTypeById(1L);
-        consultantDto.setJobType(jobTypeMapper.fromJobType(jobType));
+        consultantDto.setJobType(jobType);
 
-        UserDto userDto = new UserDto();
+        User userDto = new User();
         userDto.setUserName("john");
         userDto.setFullName("John Doe");
         userDto.setEmail("john@gmail.com");

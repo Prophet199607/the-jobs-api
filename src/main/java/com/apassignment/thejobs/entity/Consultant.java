@@ -63,4 +63,16 @@ public class Consultant {
     @OneToMany(mappedBy = "consultant", fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     private Set<Schedule> schedules = new HashSet<>();
 
+    @Override
+    public String toString() {
+        return "Consultant{" +
+                "consultantId=" + consultantId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", contactNumber='" + contactNumber + '\'' +
+                ", remark='" + remark + '\'' +
+                ", isAvailable=" + isAvailable +
+                '}';
+    }
 }

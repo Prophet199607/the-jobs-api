@@ -18,7 +18,7 @@ public interface ConsultantService {
 
     ResponseDto loadConsultantByEmail(String email);
 
-    ResponseDto createConsultant(ConsultantDto consultantDto);
+    ResponseDto createConsultant(Consultant consultantDto);
 
     ResponseDto updateConsultant(ConsultantDto consultantDto);
 

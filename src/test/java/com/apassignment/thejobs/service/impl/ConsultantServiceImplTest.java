@@ -2,18 +2,19 @@ package com.apassignment.thejobs.service.impl;
 
 import com.apassignment.thejobs.dto.ConsultantDto;
 import com.apassignment.thejobs.dto.ResponseDto;
-import com.apassignment.thejobs.entity.Consultant;
-import com.apassignment.thejobs.entity.Country;
-import com.apassignment.thejobs.entity.JobType;
+import com.apassignment.thejobs.dto.UserDto;
+import com.apassignment.thejobs.entity.*;
 import com.apassignment.thejobs.mapper.ConsultantMapper;
 import com.apassignment.thejobs.mapper.CountryMapper;
 import com.apassignment.thejobs.mapper.JobTypeMapper;
 import com.apassignment.thejobs.repository.ConsultantRepository;
 import com.apassignment.thejobs.repository.CountryRepository;
 import com.apassignment.thejobs.repository.JobTypeRepository;
+import com.apassignment.thejobs.repository.RoleRepository;
 import com.apassignment.thejobs.service.CountryService;
 import com.apassignment.thejobs.service.JobTypeService;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.modelmapper.ModelMapper;
@@ -41,6 +42,9 @@ class ConsultantServiceImplTest {
     @MockBean
     private JobTypeRepository jobTypeRepository;
 
+    @MockBean
+    private RoleRepository roleRepository;
+
     @Autowired
     private ConsultantServiceImpl consultantService;
 
@@ -62,7 +66,12 @@ class ConsultantServiceImplTest {
     @Autowired
     private ModelMapper modelMapper;
 
+    @BeforeEach
+    void setUp() {
+        when(roleRepository.findById(2L)).thenReturn(Optional.of(new Role(2L, "ROLE_CONSULTANT")));
+    }
 
+    @Transactional
     @Test
     void testCreateConsultant_Success() {
         Consultant consultant = new Consultant();
@@ -73,29 +82,36 @@ class ConsultantServiceImplTest {
 
         ConsultantDto consultantDto = consultantMapper.fromConsultant(consultant);
 
-        Country country = new Country(10L, "USA", 1);
-        consultantDto.setCountry(countryMapper.fromCountry(country));
+        Country country = new Country(1L, "USA", 1);
+        consultant.setCountry(country);
 
-        JobType jobType = new JobType(6L,"Full stack developer", 1);
-        consultantDto.setJobType(jobTypeMapper.fromJobType(jobType));
+        JobType jobType = new JobType(1L,"Full stack developer", 1);
+        consultant.setJobType(jobType);
 
-        Consultant mappedConsultant = modelMapper.map(consultantDto, Consultant.class);
+        User userDto = new User();
+        userDto.setUserName("john");
+        userDto.setFullName("John Doe");
+        userDto.setEmail("john@gmail.com");
+        userDto.setPassword("1234");
+        consultant.setUser(userDto);
 
-        when(consultantRepository.save(mappedConsultant))
-                .thenReturn(mappedConsultant);
+//        Consultant mappedConsultant = modelMapper.map(consultantDto, Consultant.class);
+
+        when(consultantRepository.save(consultant))
+                .thenReturn(consultant);
 
         ResponseDto actualConsultantResponse =
-                consultantService.createConsultant(consultantDto);
+                consultantService.createConsultant(consultant);
 
-        ConsultantDto actualConsultant = (ConsultantDto) actualConsultantResponse.getData();
+        Consultant actualConsultant =  modelMapper.map(actualConsultantResponse.getData(), Consultant.class);
 
-        assertEquals(consultantDto.getFirstName(), actualConsultant.getFirstName());
-        assertEquals(consultantDto.getLastName(), actualConsultant.getLastName());
-        assertEquals(consultantDto.getEmail(), actualConsultant.getEmail());
-        assertEquals(consultantDto.getIsAvailable(), actualConsultant.getIsAvailable());
-        assertEquals(consultantDto.getCountry().getCountryName(), actualConsultant.getCountry().getCountryName());
-        assertEquals(consultantDto.getJobType().getJobType(), actualConsultant.getJobType().getJobType());
+        assertEquals(consultant.getFirstName(), actualConsultant.getFirstName());
+        assertEquals(consultant.getLastName(), actualConsultant.getLastName());
+        assertEquals(consultant.getEmail(), actualConsultant.getEmail());
+        assertEquals(consultant.getIsAvailable(), actualConsultant.getIsAvailable());
+        assertEquals(consultant.getCountry().getCountryName(), actualConsultant.getCountry().getCountryName());
+        assertEquals(consultant.getJobType().getJobType(), actualConsultant.getJobType().getJobType());
         assertEquals("Consultant has been saved successfully!", actualConsultantResponse.getMessage());
-        verify(consultantRepository, times(1)).save(mappedConsultant);
+        verify(consultantRepository, times(1)).save(consultant);
     }
 }

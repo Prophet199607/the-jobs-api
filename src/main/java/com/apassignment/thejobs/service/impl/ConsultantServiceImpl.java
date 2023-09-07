@@ -126,27 +126,27 @@ public class ConsultantServiceImpl implements ConsultantService {
     }
 
     @Override
-    public ResponseDto createConsultant(ConsultantDto consultantDto) {
+    public ResponseDto createConsultant(Consultant consultant) {
         /* check whether the email is duplicate or not in the user table **/
-        User loadedUser = userService.loadUserByEmail(consultantDto.getUser().getEmail());
+        User loadedUser = userService.loadUserByEmail(consultant.getUser().getEmail());
         if (loadedUser != null) {
             return new ResponseDto(ResponseType.DUPLICATE_ENTRY, HttpStatus.CONFLICT, "Duplicate user email found!", null);
         }
 
-        if (consultantRepository.existsByEmail(consultantDto.getEmail())) {
+        if (consultantRepository.existsByEmail(consultant.getEmail())) {
             return new ResponseDto(ResponseType.DUPLICATE_ENTRY, HttpStatus.CONFLICT, "Duplicate email found!", null);
         }
 
-        User user = userService.createUser(new UserDto(consultantDto.getUser().getUserName(),
-                consultantDto.getUser().getFullName(),
-                consultantDto.getUser().getEmail(), consultantDto.getUser().getPassword()));
+        User user = userService.createUser(new UserDto(consultant.getUser().getUsername(),
+                consultant.getUser().getFullName(),
+                consultant.getUser().getEmail(), consultant.getUser().getPassword()));
 
         userService.assignRoleToUser(user.getUserId(), 2L);
 
-        Consultant consultant = consultantMapper.fromConsultantDto(consultantDto);
+//        Consultant consultant = consultantMapper.fromConsultantDto(consultantDto);
         consultant.setUser(user);
-        Country country = modelMapper.map(consultantDto.getCountry(), Country.class);
-        JobType jobType = modelMapper.map(consultantDto.getJobType(), JobType.class);
+        Country country = modelMapper.map(consultant.getCountry(), Country.class);
+        JobType jobType = modelMapper.map(consultant.getJobType(), JobType.class);
         consultant.setCountry(country);
         consultant.setJobType(jobType);
 
