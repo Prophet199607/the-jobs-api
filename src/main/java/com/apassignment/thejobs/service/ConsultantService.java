@@ -4,6 +4,8 @@ import com.apassignment.thejobs.dto.ConsultantDto;
 import com.apassignment.thejobs.dto.ResponseDto;
 import com.apassignment.thejobs.entity.Consultant;
 
+import java.util.List;
+
 public interface ConsultantService {
     Consultant findConsultantById(Long consultantId);
     Consultant findConsultantByUser(Long userId);
@@ -15,6 +17,8 @@ public interface ConsultantService {
     ResponseDto fetchAllConsultantsWithPagination(int page, int size);
 
     ResponseDto findConsultantsByName(String name, int page, int size);
+
+    ResponseDto findConsultantsByJobTypeAndCountry(Long jobTypeId, Long countryId);
 
     ResponseDto loadConsultantByEmail(String email);
 

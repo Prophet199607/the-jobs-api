@@ -73,4 +73,10 @@ public class ConsultantController {
         ResponseDto responseDto = consultantService.fetchConsultantById(consultantId);
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }
+
+    @GetMapping("/job-type/{jobTypeId}/country/{countryId}")
+    public ResponseEntity<ResponseDto> loadConsultantsByJobTypeAndCountry(@PathVariable Long jobTypeId, @PathVariable Long countryId) {
+        ResponseDto responseDto = consultantService.findConsultantsByJobTypeAndCountry(jobTypeId, countryId);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
 }

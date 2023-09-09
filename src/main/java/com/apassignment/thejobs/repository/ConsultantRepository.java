@@ -1,6 +1,7 @@
 package com.apassignment.thejobs.repository;
 
 import com.apassignment.thejobs.dto.ConsultantDto;
+import com.apassignment.thejobs.dto.ConsultantResponseDto;
 import com.apassignment.thejobs.entity.Consultant;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface ConsultantRepository extends JpaRepository<Consultant, Long> {
@@ -17,7 +20,9 @@ public interface ConsultantRepository extends JpaRepository<Consultant, Long> {
     Page<Consultant> findConsultantsByFirstName(@Param("name") String name, PageRequest pageRequest);
     @Query(value = "select c from Consultant c")
     Page<Consultant> getAllConsultantsWithPagination(PageRequest pageRequest);
-
     @Query(value = "select c.* from consultants as c where c.user_id=:userId", nativeQuery = true)
     Consultant findConsultantByUserId(@Param("userId") Long userId);
+
+    @Query(value = "select c from Consultant as c where c.jobType.jobTypeId =:jobTypeId and c.country.countryId =:countryId")
+    List<Consultant> findConsultantsByJobTypeAndCountryCustom(@Param("jobTypeId") Long jobTypeId, @Param("countryId") Long countryId);
 }

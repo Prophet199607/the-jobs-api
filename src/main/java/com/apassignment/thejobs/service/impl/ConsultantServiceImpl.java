@@ -113,6 +113,19 @@ public class ConsultantServiceImpl implements ConsultantService {
     }
 
     @Override
+    public ResponseDto findConsultantsByJobTypeAndCountry(Long jobTypeId, Long countryId) {
+        List<ConsultantResponseDto> consultants = consultantRepository.findConsultantsByJobTypeAndCountryCustom(jobTypeId, countryId)
+                .stream().map(consultant -> modelMapper.map(consultant, ConsultantResponseDto.class))
+                .collect(Collectors.toList());
+        return new ResponseDto(
+                ResponseType.SUCCESS,
+                HttpStatus.OK,
+                "Success",
+                consultants
+        );
+    }
+
+    @Override
     public ResponseDto loadConsultantByEmail(String email) {
         Consultant consultant = consultantRepository.findConsultantsByEmail(email);
         if (consultant == null) return new ResponseDto(ResponseType.DATA_NOT_FOUND,
