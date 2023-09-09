@@ -1,9 +1,6 @@
 package com.apassignment.thejobs.runner;
 
-import com.apassignment.thejobs.dto.AppointmentDto;
-import com.apassignment.thejobs.dto.ConsultantDto;
-import com.apassignment.thejobs.dto.JobSeekerDto;
-import com.apassignment.thejobs.dto.UserDto;
+import com.apassignment.thejobs.dto.*;
 import com.apassignment.thejobs.entity.*;
 import com.apassignment.thejobs.mapper.CountryMapper;
 import com.apassignment.thejobs.mapper.JobTypeMapper;
@@ -59,10 +56,9 @@ public class MyRunner implements CommandLineRunner {
         createAdmin();
         createConsultant();
         createJobSeeker();
-        createAppointment();
+//        createAppointment();
 
     }
-
 
     private void createCountries() {
         Arrays.asList("Australia", "USA", "Canada", "Japan", "Korea", "New Zealand", "UK", "Russia", "Germany")
@@ -100,9 +96,11 @@ public class MyRunner implements CommandLineRunner {
 
     private void createAppointment() {
         AppointmentDto appointmentDto = new AppointmentDto();
-        appointmentDto.setAppointmentDate(LocalDate.now());
-        appointmentDto.setTimeFrom(LocalTime.now());
-        appointmentDto.setTimeTo(LocalTime.now().plusHours(1));
+//        appointmentDto.setAppointmentDate(LocalDate.now());
+//        appointmentDto.setTimeFrom(LocalTime.now());
+//        appointmentDto.setTimeTo(LocalTime.now().plusHours(1));
+        appointmentDto.setStatus(0);
+        appointmentDto.setIsAccepted(false);
 
         Consultant consultant = consultantService.findConsultantById(1L);
         appointmentDto.setConsultant(modelMapper.map(consultant, ConsultantDto.class));

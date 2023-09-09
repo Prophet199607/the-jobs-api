@@ -1,6 +1,7 @@
 package com.apassignment.thejobs.service;
 
 import com.apassignment.thejobs.dto.AppointmentDto;
+import com.apassignment.thejobs.dto.ConsultantDto;
 import com.apassignment.thejobs.dto.ResponseDto;
 import com.apassignment.thejobs.dto.ScheduleDto;
 import com.apassignment.thejobs.entity.Appointment;
@@ -17,6 +18,8 @@ public interface ScheduleService {
     void removeSchedule(Long scheduleId);
 
     ResponseDto loadSchedulesByConsultant(Long scheduleId);
+
+    ResponseDto loadAvailableSchedulesByConsultant(Long consultantId);
 
     void deleteAllSchedules(List<Schedule> schedules);
 

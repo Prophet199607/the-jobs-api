@@ -2,10 +2,13 @@ package com.apassignment.thejobs.service;
 
 import com.apassignment.thejobs.dto.JobSeekerDto;
 import com.apassignment.thejobs.dto.ResponseDto;
+import com.apassignment.thejobs.entity.Consultant;
 import com.apassignment.thejobs.entity.JobSeeker;
 
 public interface JobSeekerService {
     JobSeeker findJobSeekerById(Long jobSeekerId);
+
+    JobSeeker findConsultantByUser(Long userId);
 
     ResponseDto fetchJobSeekerById(Long consultantId);
 

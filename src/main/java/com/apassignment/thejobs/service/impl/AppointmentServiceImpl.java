@@ -2,11 +2,15 @@ package com.apassignment.thejobs.service.impl;
 
 import com.apassignment.thejobs.dto.AppointmentDto;
 import com.apassignment.thejobs.dto.ResponseDto;
+import com.apassignment.thejobs.dto.ScheduleDto;
 import com.apassignment.thejobs.entity.Appointment;
 import com.apassignment.thejobs.entity.Consultant;
+import com.apassignment.thejobs.entity.Schedule;
 import com.apassignment.thejobs.repository.AppointmentRepository;
 import com.apassignment.thejobs.repository.ConsultantRepository;
+import com.apassignment.thejobs.repository.ScheduleRepository;
 import com.apassignment.thejobs.service.AppointmentService;
+import com.apassignment.thejobs.service.ScheduleService;
 import com.apassignment.thejobs.util.ResponseType;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -28,6 +32,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     private ConsultantRepository consultantRepository;
 
     @Autowired
+    private ScheduleRepository scheduleRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
     @Override
     public Appointment loadAppointmentById(Long appointmentId) {
@@ -42,6 +49,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         Consultant consultant = consultantRepository.findById(consultantId)
                 .orElseThrow(() -> new EntityNotFoundException("Consultant not found!"));
         appointment.setConsultant(consultant);
+        scheduleRepository.markScheduleAsBooked(appointment.getSchedule().getScheduleId());
         Appointment savedAppointment = appointmentRepository.save(appointment);
         return new ResponseDto(
                 ResponseType.SUCCESS,

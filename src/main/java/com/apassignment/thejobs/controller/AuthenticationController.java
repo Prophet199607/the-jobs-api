@@ -5,9 +5,11 @@ import com.apassignment.thejobs.dto.AuthRequest;
 import com.apassignment.thejobs.dto.AuthResponseDto;
 import com.apassignment.thejobs.dto.UserResponseDto;
 import com.apassignment.thejobs.entity.Consultant;
+import com.apassignment.thejobs.entity.JobSeeker;
 import com.apassignment.thejobs.entity.User;
 import com.apassignment.thejobs.repository.UserRepository;
 import com.apassignment.thejobs.service.ConsultantService;
+import com.apassignment.thejobs.service.JobSeekerService;
 import com.apassignment.thejobs.service.JwtService;
 import com.apassignment.thejobs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,9 @@ public class AuthenticationController {
     @Autowired
     private ConsultantService consultantService;
 
+    @Autowired
+    private JobSeekerService jobSeekerService;
+
     @PostMapping("/authenticate")
     public ResponseEntity<AuthResponseDto> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
@@ -62,6 +67,10 @@ public class AuthenticationController {
             if (role.equals("ROLE_CONSULTANT")) {
                 Consultant consultantByUser = consultantService.findConsultantByUser(loggedInUser.getUserId());
                 authResponseDto.setLoggedUserId(consultantByUser.getConsultantId());
+            }
+            if (role.equals("ROLE_USER")) {
+                JobSeeker jobSeekerByUser = jobSeekerService.findConsultantByUser(loggedInUser.getUserId());
+                authResponseDto.setLoggedUserId(jobSeekerByUser.getJobSeekerId());
             }
 
             authResponseDto.setRoles(roles);

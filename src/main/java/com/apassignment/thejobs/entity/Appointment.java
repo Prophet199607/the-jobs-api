@@ -18,16 +18,12 @@ public class Appointment {
     private Long appointmentId;
 
     @Basic
-    @Column(name = "appointment_date", nullable = false)
-    private LocalDate appointmentDate;
+    @Column(name = "is_accepted", nullable = false)
+    private Boolean isAccepted;
 
     @Basic
-    @Column(name = "time_from", nullable = false)
-    private LocalTime timeFrom;
-
-    @Basic
-    @Column(name = "time_to", nullable = false)
-    private LocalTime timeTo;
+    @Column(name = "status", nullable = false)
+    private Integer status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "consultant_id", referencedColumnName = "consultant_id", nullable = false)
@@ -36,5 +32,9 @@ public class Appointment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "jobSeeker_id", referencedColumnName = "jobSeeker_id", nullable = false)
     private JobSeeker jobSeeker;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "schedule_id", referencedColumnName = "schedule_id", nullable = false)
+    private Schedule schedule;
 
 }
