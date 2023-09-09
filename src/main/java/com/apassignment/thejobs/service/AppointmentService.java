@@ -15,5 +15,7 @@ public interface AppointmentService {
 
     List<Appointment> loadAppointmentsByJobSeeker(Long jobSeekerId);
 
+    ResponseDto loadAppointmentsByJobSeeker2(Long jobSeekerId);
+
     void deleteAllAppointments(List<Appointment> appointments);
 }

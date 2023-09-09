@@ -1,15 +1,19 @@
 package com.apassignment.thejobs.service.impl;
 
 import com.apassignment.thejobs.dto.AppointmentDto;
+import com.apassignment.thejobs.dto.AppointmentResponseDto;
 import com.apassignment.thejobs.dto.ResponseDto;
 import com.apassignment.thejobs.dto.ScheduleDto;
 import com.apassignment.thejobs.entity.Appointment;
 import com.apassignment.thejobs.entity.Consultant;
+import com.apassignment.thejobs.entity.JobSeeker;
 import com.apassignment.thejobs.entity.Schedule;
 import com.apassignment.thejobs.repository.AppointmentRepository;
 import com.apassignment.thejobs.repository.ConsultantRepository;
+import com.apassignment.thejobs.repository.JobSeekerRepository;
 import com.apassignment.thejobs.repository.ScheduleRepository;
 import com.apassignment.thejobs.service.AppointmentService;
+import com.apassignment.thejobs.service.EmailSenderService;
 import com.apassignment.thejobs.service.ScheduleService;
 import com.apassignment.thejobs.util.ResponseType;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,6 +24,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -33,6 +39,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     private ScheduleRepository scheduleRepository;
+
+    @Autowired
+    private JobSeekerRepository jobSeekerRepository;
+
+    @Autowired
+    private EmailSenderService emailSenderService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -51,6 +63,25 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setConsultant(consultant);
         scheduleRepository.markScheduleAsBooked(appointment.getSchedule().getScheduleId());
         Appointment savedAppointment = appointmentRepository.save(appointment);
+
+        JobSeeker jobSeeker = jobSeekerRepository.findById(appointmentDto.getJobSeeker().getJobSeekerId())
+                .orElseThrow(() -> new EntityNotFoundException("Job Seeker not found!"));
+
+        // send appointment confirmation email to the jobSeeker
+        emailSenderService.sendEmail(jobSeeker.getEmail(),
+                "Appointment has been saved successfully",
+                "Your appointment has been on review. Once the consultant accept your appointment you will get an email");
+
+        // send new appointment placement email to the relevant consultant
+        String emailBody = "New appointment received" +
+                "\n\r" +
+                "click below link to see details " +
+                "http://localhost:7000/dashboard/manage-slots";
+
+        emailSenderService.sendEmail(consultant.getEmail(),
+                "New Appointment Request",
+                emailBody);
+
         return new ResponseDto(
                 ResponseType.SUCCESS,
                 HttpStatus.CREATED,
@@ -67,6 +98,19 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<Appointment> loadAppointmentsByJobSeeker(Long jobSeekerId) {
         return appointmentRepository.findByJobSeekerJobSeekerId(jobSeekerId);
+    }
+
+    @Override
+    public ResponseDto loadAppointmentsByJobSeeker2(Long jobSeekerId) {
+        List<AppointmentResponseDto> appointments = appointmentRepository.findAppointmentsByJobSeekerJobSeekerId(jobSeekerId)
+                .stream().map(appointment -> modelMapper.map(appointment, AppointmentResponseDto.class))
+                .collect(Collectors.toList());
+        return new ResponseDto(
+                ResponseType.SUCCESS,
+                HttpStatus.OK,
+                "success!",
+                appointments
+        );
     }
 
     @Override
