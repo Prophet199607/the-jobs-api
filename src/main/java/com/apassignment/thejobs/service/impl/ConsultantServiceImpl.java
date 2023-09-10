@@ -9,6 +9,7 @@ import com.apassignment.thejobs.mapper.ConsultantMapper;
 import com.apassignment.thejobs.repository.ConsultantRepository;
 import com.apassignment.thejobs.service.AppointmentService;
 import com.apassignment.thejobs.service.ConsultantService;
+import com.apassignment.thejobs.service.EmailSenderService;
 import com.apassignment.thejobs.service.UserService;
 import com.apassignment.thejobs.util.ResponseType;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,6 +44,9 @@ public class ConsultantServiceImpl implements ConsultantService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private EmailSenderService emailSenderService;
 
     @Override
     public Consultant findConsultantById(Long consultantId) {
@@ -148,6 +153,26 @@ public class ConsultantServiceImpl implements ConsultantService {
 
         if (consultantRepository.existsByEmail(consultant.getEmail())) {
             return new ResponseDto(ResponseType.DUPLICATE_ENTRY, HttpStatus.CONFLICT, "Duplicate email found!", null);
+        }
+
+        StringBuilder tempPassword = new StringBuilder();
+        if (consultant.getUser().getPassword() == null) {
+            int length = 5;
+            String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            Random random = new Random();
+            for (int i = 0; i < length; i++) {
+                int randomIndex = random.nextInt(characters.length());
+                char randomChar = characters.charAt(randomIndex);
+                tempPassword.append(randomChar);
+            }
+
+            consultant.getUser().setPassword(tempPassword.toString());
+
+            // send temp password email to consultant
+            emailSenderService.sendEmail(consultant.getUser().getEmail(),
+                    "Welcome!",
+                    "Hello! " + consultant.getUser().getFullName() + "\nYour temporary password is: " + tempPassword + "\nUse your first name as username");
         }
 
         User user = userService.createUser(new UserDto(consultant.getUser().getUsername(),

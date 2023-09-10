@@ -7,6 +7,7 @@ import com.apassignment.thejobs.entity.JobSeeker;
 import com.apassignment.thejobs.entity.User;
 import com.apassignment.thejobs.repository.JobSeekerRepository;
 import com.apassignment.thejobs.service.AppointmentService;
+import com.apassignment.thejobs.service.EmailSenderService;
 import com.apassignment.thejobs.service.JobSeekerService;
 import com.apassignment.thejobs.service.UserService;
 import com.apassignment.thejobs.util.ResponseType;
@@ -21,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +40,9 @@ public class JobSeekerServiceImpl implements JobSeekerService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private EmailSenderService emailSenderService;
 
     @Override
     public JobSeeker findJobSeekerById(Long jobSeekerId) {
@@ -127,7 +132,26 @@ public class JobSeekerServiceImpl implements JobSeekerService {
             return new ResponseDto(ResponseType.DUPLICATE_ENTRY, HttpStatus.CONFLICT, "Duplicate email found!", null);
         }
 
-        User user = userService.createUser(new UserDto(jobSeekerDto.getUser().getUserName(),
+        StringBuilder tempPassword = new StringBuilder();
+        if (jobSeekerDto.getUser().getPassword() == null) {
+            int length = 5;
+            String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            Random random = new Random();
+            for (int i = 0; i < length; i++) {
+                int randomIndex = random.nextInt(characters.length());
+                char randomChar = characters.charAt(randomIndex);
+                tempPassword.append(randomChar);
+            }
+            jobSeekerDto.getUser().setPassword(tempPassword.toString());
+
+            // send temp password email to the jobSeeker
+            emailSenderService.sendEmail(jobSeekerDto.getEmail(),
+                    "Welcome!",
+                    "Hello! " + jobSeekerDto.getUser().getFullName() + "\nYour temporary password is: " + tempPassword + "\n" + "Use your first name as username");
+        }
+
+        User user = userService.createUser(new UserDto(jobSeekerDto.getUser().getUserName().toLowerCase(),
                 jobSeekerDto.getUser().getFullName(),
                 jobSeekerDto.getUser().getEmail(), jobSeekerDto.getUser().getPassword()));
 
