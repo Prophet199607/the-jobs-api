@@ -3,13 +3,17 @@ package com.apassignment.thejobs.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
 @Data
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "appointments")
 public class Appointment {
     @Id
@@ -36,5 +40,9 @@ public class Appointment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id", referencedColumnName = "schedule_id", nullable = false)
     private Schedule schedule;
+
+    @CreatedDate
+    @Column(name = "create_date")
+    private LocalDateTime createDate;
 
 }

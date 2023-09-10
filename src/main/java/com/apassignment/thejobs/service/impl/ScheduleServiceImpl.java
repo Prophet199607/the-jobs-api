@@ -60,8 +60,14 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public void removeSchedule(Long scheduleId) {
+    public ResponseDto removeSchedule(Long scheduleId) {
         scheduleRepository.deleteById(scheduleId);
+        return new ResponseDto(
+                ResponseType.SUCCESS,
+                HttpStatus.OK,
+                "Success",
+                null
+        );
     }
 
     @Override

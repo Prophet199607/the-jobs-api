@@ -36,4 +36,11 @@ public class ScheduleController {
         ResponseDto responseDto = scheduleService.loadAvailableSchedulesByConsultant(consultantId);
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }
+
+    @DeleteMapping("/{scheduleId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSULTANT')")
+    public ResponseEntity<ResponseDto> deleteSchedule(@PathVariable Long scheduleId) {
+        ResponseDto responseDto = scheduleService.removeSchedule(scheduleId);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
 }

@@ -23,6 +23,16 @@ public class AppointmentController {
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }
 
+    @GetMapping("/all")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    public ResponseEntity<ResponseDto> loadAllAppointments(
+            @RequestParam(name = "startDate", defaultValue = "0") String startDate,
+            @RequestParam(name = "endDate", defaultValue = "0") String endDate
+    ) {
+        ResponseDto responseDto = appointmentService.loadAllAppointments(startDate, endDate);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<ResponseDto> createConsultant(@RequestBody AppointmentDto appointmentDto) {
