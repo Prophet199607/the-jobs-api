@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -118,6 +120,25 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public ResponseDto loadAppointmentsByConsultantId(Long consultantId, int status) {
         List<AppointmentResponseDto> appointments = appointmentRepository.findAppointmentsByConsultantIdAndStatus(consultantId, status)
+                .stream().map(appointment -> modelMapper.map(appointment, AppointmentResponseDto.class))
+                .collect(Collectors.toList());
+        return new ResponseDto(
+                ResponseType.SUCCESS,
+                HttpStatus.OK,
+                "success!",
+                appointments
+        );
+    }
+
+    @Override
+    public ResponseDto loadAllAppointments(String startDate, String endDate) {
+        if (startDate.equals("0")) {
+            LocalDate currentDate = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("y-M-d");
+            startDate = currentDate.format(formatter);
+            endDate = currentDate.format(formatter);
+        }
+        List<AppointmentResponseDto> appointments = appointmentRepository.getAllAppointmentsByDates(startDate, endDate)
                 .stream().map(appointment -> modelMapper.map(appointment, AppointmentResponseDto.class))
                 .collect(Collectors.toList());
         return new ResponseDto(

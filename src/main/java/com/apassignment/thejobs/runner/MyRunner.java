@@ -50,12 +50,12 @@ public class MyRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        createCountries();
-//        createJobTypes();
-//        createRoles();
-//        createAdmin();
-//        createConsultant();
-//        createJobSeeker();
+        createCountries();
+        createJobTypes();
+        createRoles();
+        createAdmin();
+        createConsultant();
+        createJobSeeker();
 //        createAppointment();
 
     }

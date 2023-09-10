@@ -15,7 +15,7 @@ public interface ScheduleService {
 
     ResponseDto createSchedule(ScheduleDto scheduleDto);
 
-    void removeSchedule(Long scheduleId);
+    ResponseDto removeSchedule(Long scheduleId);
 
     ResponseDto loadSchedulesByConsultant(Long scheduleId);
 

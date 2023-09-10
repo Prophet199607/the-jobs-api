@@ -20,6 +20,8 @@ public interface AppointmentService {
 
     ResponseDto loadAppointmentsByConsultantId(Long consultantId, int status);
 
+    ResponseDto loadAllAppointments(String startDate, String endDate);
+
     ResponseDto changeAppointmentStatus(Long appointmentId, int status, boolean isAccepted);
 
     ResponseDto loadAppointmentsByJobSeeker2(Long jobSeekerId);
