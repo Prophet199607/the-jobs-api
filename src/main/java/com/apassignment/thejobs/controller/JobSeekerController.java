@@ -48,6 +48,7 @@ public class JobSeekerController {
     }
 
     @DeleteMapping("/{jobSeekerId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<ResponseDto> deleteJobSeeker(@PathVariable Long jobSeekerId) {
         ResponseDto responseDto = jobSeekerService.removeJobSeeker(jobSeekerId);
         return new ResponseEntity<>(responseDto, responseDto.getStatus());

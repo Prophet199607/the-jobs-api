@@ -28,4 +28,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query(value = "SELECT * FROM appointments as a WHERE DATE(a.create_date) \n" +
             "BETWEEN :startDate AND :endDate", nativeQuery = true)
     List<Appointment> getAllAppointmentsByDates(@Param("startDate") String startDate, @Param("endDate") String endDate);
+
+    Long countAppointmentByConsultantConsultantId(Long consultantId);
+
+    Long countAppointmentByConsultantConsultantIdAndStatus(Long consultantId, int status);
 }

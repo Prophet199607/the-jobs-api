@@ -105,4 +105,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     public Long getLastInertedScheduleId() {
         return scheduleRepository.getLastInsertedScheduleId();
     }
+
+    @Override
+    public Long getCountOfRecords() {
+        return scheduleRepository.count();
+    }
 }

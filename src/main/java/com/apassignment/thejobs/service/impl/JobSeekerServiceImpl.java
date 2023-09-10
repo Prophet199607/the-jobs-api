@@ -208,4 +208,9 @@ public class JobSeekerServiceImpl implements JobSeekerService {
         );
 
     }
+
+    @Override
+    public Long getCountOfRecords() {
+        return jobSeekerRepository.count();
+    }
 }

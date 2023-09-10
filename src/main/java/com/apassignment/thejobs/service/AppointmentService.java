@@ -27,4 +27,6 @@ public interface AppointmentService {
     ResponseDto loadAppointmentsByJobSeeker2(Long jobSeekerId);
 
     void deleteAllAppointments(List<Appointment> appointments);
+
+    Long getCountOfRecords();
 }

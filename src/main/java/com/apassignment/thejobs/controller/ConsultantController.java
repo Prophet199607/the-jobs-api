@@ -34,6 +34,7 @@ public class ConsultantController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<ResponseDto> searchConsultant(
             @RequestParam(name = "keyword", defaultValue = "") String keyword,
             @RequestParam(name = "page", defaultValue = "1") int page,
@@ -44,18 +45,21 @@ public class ConsultantController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<ResponseDto> createConsultant(@RequestBody Consultant consultantDto) {
         ResponseDto responseDto = consultantService.createConsultant(consultantDto);
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }
 
     @DeleteMapping("/{consultantId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<ResponseDto> deleteInstructor(@PathVariable Long consultantId) {
         ResponseDto responseDto = consultantService.removeConsultant(consultantId);
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }
 
     @PutMapping("/{consultantId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<ResponseDto> updateInstructor(@RequestBody ConsultantDto consultantDto, @PathVariable Long consultantId) {
         consultantDto.setConsultantId(consultantId);
         ResponseDto responseDto = consultantService.updateConsultant(consultantDto);
