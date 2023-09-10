@@ -119,7 +119,7 @@ class ConsultantServiceImplTest {
         Consultant actualConsultant =  modelMapper.map(actualConsultantResponse.getData(), Consultant.class);
 
         assertEquals(consultant.getFirstName(), actualConsultant.getFirstName());
-        assertEquals("dddd", actualConsultant.getLastName());
+        assertEquals(consultant.getLastName(), actualConsultant.getLastName());
         assertEquals(consultant.getEmail(), actualConsultant.getEmail());
         assertEquals(consultant.getIsAvailable(), actualConsultant.getIsAvailable());
         assertEquals(consultant.getCountry().getCountryName(), actualConsultant.getCountry().getCountryName());
