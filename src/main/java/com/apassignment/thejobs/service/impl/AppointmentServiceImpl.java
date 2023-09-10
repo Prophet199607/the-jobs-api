@@ -70,13 +70,13 @@ public class AppointmentServiceImpl implements AppointmentService {
         // send appointment confirmation email to the jobSeeker
         emailSenderService.sendEmail(jobSeeker.getEmail(),
                 "Appointment has been saved successfully",
-                "Your appointment has been on review. Once the consultant accept your appointment you will get an email");
+                "Your appointment is on review. Once the consultant accept your appointment you will get an email");
 
         // send new appointment placement email to the relevant consultant
         String emailBody = "New appointment received" +
                 "\n\r" +
                 "click below link to see details " +
-                "http://localhost:7000/dashboard/manage-slots";
+                "http://localhost:7000/dashboard/consultant-appointments";
 
         emailSenderService.sendEmail(consultant.getEmail(),
                 "New Appointment Request",
