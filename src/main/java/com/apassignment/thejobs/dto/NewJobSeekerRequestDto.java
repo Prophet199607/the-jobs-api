@@ -1,11 +1,9 @@
 package com.apassignment.thejobs.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @Data
-public class JobSeekerDto {
-    private Long jobSeekerId;
+public class NewJobSeekerRequestDto {
     private String firstName;
     private String lastName;
     private String email;
@@ -13,4 +11,9 @@ public class JobSeekerDto {
     private String remark;
     private Boolean isActive;
     private UserDto user;
+    private Boolean isAccepted;
+    private Integer status;
+    private ConsultantDto consultant;
+    private JobSeekerDto jobSeeker;
+    private ScheduleDto schedule;
 }

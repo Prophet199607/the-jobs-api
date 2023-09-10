@@ -45,6 +45,11 @@ public class JobSeekerServiceImpl implements JobSeekerService {
     }
 
     @Override
+    public JobSeeker findConsultantByUser(Long userId) {
+        return jobSeekerRepository.findJobSeekerByUserId(userId);
+    }
+
+    @Override
     public ResponseDto fetchJobSeekerById(Long jobSeekerId) {
         JobSeeker jobSeeker = jobSeekerRepository.findById(jobSeekerId)
                 .orElseThrow(() -> new EntityNotFoundException("Consultant with ID " + jobSeekerId + " not found"));

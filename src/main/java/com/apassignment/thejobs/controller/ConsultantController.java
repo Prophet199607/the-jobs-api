@@ -2,6 +2,7 @@ package com.apassignment.thejobs.controller;
 
 import com.apassignment.thejobs.dto.ConsultantDto;
 import com.apassignment.thejobs.dto.ResponseDto;
+import com.apassignment.thejobs.entity.Consultant;
 import com.apassignment.thejobs.service.ConsultantService;
 import com.apassignment.thejobs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class ConsultantController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDto> createConsultant(@RequestBody ConsultantDto consultantDto) {
+    public ResponseEntity<ResponseDto> createConsultant(@RequestBody Consultant consultantDto) {
         ResponseDto responseDto = consultantService.createConsultant(consultantDto);
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }
@@ -70,6 +71,12 @@ public class ConsultantController {
     @GetMapping("/findById/{consultantId}")
     public ResponseEntity<ResponseDto> loadConsultantByEmail(@PathVariable Long consultantId) {
         ResponseDto responseDto = consultantService.fetchConsultantById(consultantId);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
+
+    @GetMapping("/job-type/{jobTypeId}/country/{countryId}")
+    public ResponseEntity<ResponseDto> loadConsultantsByJobTypeAndCountry(@PathVariable Long jobTypeId, @PathVariable Long countryId) {
+        ResponseDto responseDto = consultantService.findConsultantsByJobTypeAndCountry(jobTypeId, countryId);
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }
 }

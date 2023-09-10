@@ -23,10 +23,17 @@ public class ScheduleController {
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }
 
-    @GetMapping("/{consultantId}")
+    @GetMapping("/all/consultant/{consultantId}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSULTANT')")
     public ResponseEntity<ResponseDto> loadSchedulesByConsultant(@PathVariable Long consultantId) {
         ResponseDto responseDto = scheduleService.loadSchedulesByConsultant(consultantId);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
+
+    @GetMapping("/available/consultant/{consultantId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSULTANT', 'ROLE_USER')")
+    public ResponseEntity<ResponseDto> loadAvailableSchedulesByConsultant(@PathVariable Long consultantId) {
+        ResponseDto responseDto = scheduleService.loadAvailableSchedulesByConsultant(consultantId);
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }
 }

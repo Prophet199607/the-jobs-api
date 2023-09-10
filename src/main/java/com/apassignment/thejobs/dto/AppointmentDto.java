@@ -7,9 +7,9 @@ import java.time.LocalTime;
 @Data
 public class AppointmentDto {
     private Long appointmentId;
-    private LocalDate appointmentDate;
-    private LocalTime timeFrom;
-    private LocalTime timeTo;
+    private Boolean isAccepted;
+    private Integer status;
     private ConsultantDto consultant;
     private JobSeekerDto jobSeeker;
+    private ScheduleDto schedule;
 }

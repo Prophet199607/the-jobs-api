@@ -27,4 +27,9 @@ public class Role {
     public Role(String name) {
         this.name = name;
     }
+
+    public Role(Long roleId, String name) {
+        this.roleId = roleId;
+        this.name = name;
+    }
 }

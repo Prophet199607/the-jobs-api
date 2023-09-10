@@ -1,6 +1,5 @@
 package com.apassignment.thejobs.repository;
 
-import com.apassignment.thejobs.entity.Consultant;
 import com.apassignment.thejobs.entity.JobSeeker;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,4 +14,7 @@ public interface JobSeekerRepository extends JpaRepository<JobSeeker, Long> {
     Page<JobSeeker> findJobSeekersByFirstName(@Param("name") String name, PageRequest pageRequest);
     @Query(value = "select j from JobSeeker as j")
     Page<JobSeeker> getAllJobSeekersWithPagination(PageRequest pageRequest);
+
+    @Query(value = "select j.* from job_seekers as j where j.user_id=:userId", nativeQuery = true)
+    JobSeeker findJobSeekerByUserId(@Param("userId") Long userId);
 }

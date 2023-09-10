@@ -1,9 +1,6 @@
 package com.apassignment.thejobs.runner;
 
-import com.apassignment.thejobs.dto.AppointmentDto;
-import com.apassignment.thejobs.dto.ConsultantDto;
-import com.apassignment.thejobs.dto.JobSeekerDto;
-import com.apassignment.thejobs.dto.UserDto;
+import com.apassignment.thejobs.dto.*;
 import com.apassignment.thejobs.entity.*;
 import com.apassignment.thejobs.mapper.CountryMapper;
 import com.apassignment.thejobs.mapper.JobTypeMapper;
@@ -53,16 +50,15 @@ public class MyRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        createCountries();
-        createJobTypes();
-        createRoles();
-        createAdmin();
-        createConsultant();
-        createJobSeeker();
-        createAppointment();
+//        createCountries();
+//        createJobTypes();
+//        createRoles();
+//        createAdmin();
+//        createConsultant();
+//        createJobSeeker();
+//        createAppointment();
 
     }
-
 
     private void createCountries() {
         Arrays.asList("Australia", "USA", "Canada", "Japan", "Korea", "New Zealand", "UK", "Russia", "Germany")
@@ -75,23 +71,23 @@ public class MyRunner implements CommandLineRunner {
     }
 
     private void createConsultant() {
-        ConsultantDto consultantDto = new ConsultantDto();
-        consultantDto.setEmail("john@gmail.com");
+        Consultant consultantDto = new Consultant();
+        consultantDto.setEmail("pasinduxx@hotmail.com");
         consultantDto.setFirstName("John");
         consultantDto.setLastName("Doe");
         consultantDto.setContactNumber("0712381996");
         consultantDto.setIsAvailable(true);
 
         Country country = countryService.loadCountryById(7L);
-        consultantDto.setCountry(countryMapper.fromCountry(country));
+        consultantDto.setCountry(country);
 
         JobType jobType = jobTypeService.loadJobTypeById(1L);
-        consultantDto.setJobType(jobTypeMapper.fromJobType(jobType));
+        consultantDto.setJobType(jobType);
 
-        UserDto userDto = new UserDto();
+        User userDto = new User();
         userDto.setUserName("john");
         userDto.setFullName("John Doe");
-        userDto.setEmail("john@gmail.com");
+        userDto.setEmail("pasinduxx@hotmail.com");
         userDto.setPassword("1234");
         consultantDto.setUser(userDto);
 
@@ -100,9 +96,11 @@ public class MyRunner implements CommandLineRunner {
 
     private void createAppointment() {
         AppointmentDto appointmentDto = new AppointmentDto();
-        appointmentDto.setAppointmentDate(LocalDate.now());
-        appointmentDto.setTimeFrom(LocalTime.now());
-        appointmentDto.setTimeTo(LocalTime.now().plusHours(1));
+//        appointmentDto.setAppointmentDate(LocalDate.now());
+//        appointmentDto.setTimeFrom(LocalTime.now());
+//        appointmentDto.setTimeTo(LocalTime.now().plusHours(1));
+        appointmentDto.setStatus(0);
+        appointmentDto.setIsAccepted(false);
 
         Consultant consultant = consultantService.findConsultantById(1L);
         appointmentDto.setConsultant(modelMapper.map(consultant, ConsultantDto.class));
@@ -126,7 +124,7 @@ public class MyRunner implements CommandLineRunner {
 
     private void createJobSeeker() {
         JobSeekerDto jobSeekerDto = new JobSeekerDto();
-        jobSeekerDto.setEmail("tom@gmail.com");
+        jobSeekerDto.setEmail("dev7@onimtait.com");
         jobSeekerDto.setFirstName("Tom");
         jobSeekerDto.setLastName("Riddle");
         jobSeekerDto.setContactNumber("0712381996");
@@ -135,7 +133,7 @@ public class MyRunner implements CommandLineRunner {
         UserDto userDto = new UserDto();
         userDto.setUserName("tom");
         userDto.setFullName("Tom Riddle");
-        userDto.setEmail("tom@gmail.com");
+        userDto.setEmail("dev7@onimtait.com");
         userDto.setPassword("456");
         jobSeekerDto.setUser(userDto);
 

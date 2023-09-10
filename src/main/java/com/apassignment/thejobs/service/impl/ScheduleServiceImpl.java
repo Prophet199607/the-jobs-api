@@ -1,5 +1,6 @@
 package com.apassignment.thejobs.service.impl;
 
+import com.apassignment.thejobs.dto.ConsultantResponseDto;
 import com.apassignment.thejobs.dto.ResponseDto;
 import com.apassignment.thejobs.dto.ScheduleDto;
 import com.apassignment.thejobs.entity.Consultant;
@@ -43,7 +44,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         schedule.setConsultant(consultant);
 
         long newId = 1L;
-        Long lastInsertedScheduleId = scheduleRepository.getLastInertedScheduleId();
+        Long lastInsertedScheduleId = scheduleRepository.getLastInsertedScheduleId();
         if (lastInsertedScheduleId != null) {
             newId = lastInsertedScheduleId + 1;
         }
@@ -64,8 +65,21 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ResponseDto loadSchedulesByConsultant(Long scheduleId) {
-        List<ScheduleDto> schedules = scheduleRepository.findByConsultantConsultantId(scheduleId)
+    public ResponseDto loadSchedulesByConsultant(Long consultantId) {
+        List<ScheduleDto> schedules = scheduleRepository.findByConsultantConsultantId(consultantId)
+                .stream().map(schedule -> modelMapper.map(schedule, ScheduleDto.class))
+                .toList();
+        return new ResponseDto(
+                ResponseType.SUCCESS,
+                HttpStatus.OK,
+                "Success",
+                schedules
+        );
+    }
+
+    @Override
+    public ResponseDto loadAvailableSchedulesByConsultant(Long consultantId) {
+        List<ScheduleDto> schedules = scheduleRepository.findAvailableSchedulesByConsultantId(consultantId)
                 .stream().map(schedule -> modelMapper.map(schedule, ScheduleDto.class))
                 .toList();
         return new ResponseDto(
@@ -83,6 +97,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public Long getLastInertedScheduleId() {
-        return scheduleRepository.getLastInertedScheduleId();
+        return scheduleRepository.getLastInsertedScheduleId();
     }
 }

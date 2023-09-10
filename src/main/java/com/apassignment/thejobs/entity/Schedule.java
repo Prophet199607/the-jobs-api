@@ -59,4 +59,7 @@ public class Schedule {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "consultant_id", referencedColumnName = "consultant_id", nullable = false)
     private Consultant consultant;
+
+    @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private Set<Appointment> appointments = new HashSet<>();
 }
