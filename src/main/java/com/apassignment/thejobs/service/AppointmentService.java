@@ -11,9 +11,13 @@ public interface AppointmentService {
 
     ResponseDto createAppointment(AppointmentDto appointmentDto);
 
-    void removeAppointment(Long appointmentId);
+    ResponseDto removeAppointment(Long appointmentId);
 
     List<Appointment> loadAppointmentsByJobSeeker(Long jobSeekerId);
+
+    ResponseDto loadAppointmentsByConsultantId(Long consultantId, int status);
+
+    ResponseDto changeAppointmentStatus(Long appointmentId, int status, boolean isAccepted);
 
     ResponseDto loadAppointmentsByJobSeeker2(Long jobSeekerId);
 

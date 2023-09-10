@@ -2,8 +2,6 @@ package com.apassignment.thejobs.controller;
 
 import com.apassignment.thejobs.dto.AppointmentDto;
 import com.apassignment.thejobs.dto.ResponseDto;
-import com.apassignment.thejobs.entity.Appointment;
-import com.apassignment.thejobs.entity.Consultant;
 import com.apassignment.thejobs.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +26,30 @@ public class AppointmentController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<ResponseDto> createConsultant(@RequestBody AppointmentDto appointmentDto) {
         ResponseDto responseDto = appointmentService.createAppointment(appointmentDto);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
+
+    @GetMapping("/consultant/{consultantId}/status/{status}")
+    @PreAuthorize("hasAnyAuthority('ROLE_CONSULTANT')")
+    public ResponseEntity<ResponseDto> loadNewAppointmentsByConsultantId(@PathVariable Long consultantId, @PathVariable int status) {
+        ResponseDto responseDto = appointmentService.loadAppointmentsByConsultantId(consultantId, status);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
+
+    @GetMapping("/change-status/{appointmentId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_CONSULTANT')")
+    public ResponseEntity<ResponseDto> changeStatusOfAppointment(
+            @PathVariable Long appointmentId,
+            @RequestParam(name = "status") int status,
+            @RequestParam(name = "isAccepted") boolean isAccepted) {
+        ResponseDto responseDto = appointmentService.changeAppointmentStatus(appointmentId, status, isAccepted);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
+
+    @DeleteMapping("/{appointmentId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    public ResponseEntity<ResponseDto> deleteAppointment(@PathVariable Long appointmentId) {
+        ResponseDto responseDto = appointmentService.removeAppointment(appointmentId);
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }
 }

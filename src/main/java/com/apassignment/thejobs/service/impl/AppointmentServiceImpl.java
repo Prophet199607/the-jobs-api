@@ -61,7 +61,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         Consultant consultant = consultantRepository.findById(consultantId)
                 .orElseThrow(() -> new EntityNotFoundException("Consultant not found!"));
         appointment.setConsultant(consultant);
-        scheduleRepository.markScheduleAsBooked(appointment.getSchedule().getScheduleId());
+        scheduleRepository.changeScheduleBookedStatus(appointment.getSchedule().getScheduleId(), true);
         Appointment savedAppointment = appointmentRepository.save(appointment);
 
         JobSeeker jobSeeker = jobSeekerRepository.findById(appointmentDto.getJobSeeker().getJobSeekerId())
@@ -91,13 +91,49 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public void removeAppointment(Long appointmentId) {
+    public ResponseDto removeAppointment(Long appointmentId) {
         appointmentRepository.deleteById(appointmentId);
+        Appointment appointment = loadAppointmentById(appointmentId);
+        scheduleRepository.changeScheduleBookedStatus(appointment.getSchedule().getScheduleId(), true);
+        return new ResponseDto(
+                ResponseType.SUCCESS,
+                HttpStatus.OK,
+                "success!",
+                null
+        );
     }
 
     @Override
     public List<Appointment> loadAppointmentsByJobSeeker(Long jobSeekerId) {
         return appointmentRepository.findByJobSeekerJobSeekerId(jobSeekerId);
+    }
+
+    @Override
+    public ResponseDto loadAppointmentsByConsultantId(Long consultantId, int status) {
+        List<AppointmentResponseDto> appointments = appointmentRepository.findAppointmentsByConsultantIdAndStatus(consultantId, status)
+                .stream().map(appointment -> modelMapper.map(appointment, AppointmentResponseDto.class))
+                .collect(Collectors.toList());
+        return new ResponseDto(
+                ResponseType.SUCCESS,
+                HttpStatus.OK,
+                "success!",
+                appointments
+        );
+    }
+
+    @Override
+    public ResponseDto changeAppointmentStatus(Long appointmentId, int status, boolean isAccepted) {
+        appointmentRepository.changeAppointmentStatus(appointmentId, status, isAccepted);
+        Appointment appointment = loadAppointmentById(appointmentId);
+        if (status == 3) {
+            scheduleRepository.changeScheduleBookedStatus(appointment.getSchedule().getScheduleId(), false);
+        }
+        return new ResponseDto(
+                ResponseType.SUCCESS,
+                HttpStatus.OK,
+                "success!",
+                null
+        );
     }
 
     @Override
