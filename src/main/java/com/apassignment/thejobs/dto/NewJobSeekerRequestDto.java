@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class NewJobSeekerRequestDto {
-    private Long jobSeekerId;
     private String firstName;
     private String lastName;
     private String email;
@@ -12,4 +11,9 @@ public class NewJobSeekerRequestDto {
     private String remark;
     private Boolean isActive;
     private UserDto user;
+    private Boolean isAccepted;
+    private Integer status;
+    private ConsultantDto consultant;
+    private JobSeekerDto jobSeeker;
+    private ScheduleDto schedule;
 }

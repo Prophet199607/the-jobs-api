@@ -1,6 +1,7 @@
 package com.apassignment.thejobs.controller;
 
 import com.apassignment.thejobs.dto.AppointmentDto;
+import com.apassignment.thejobs.dto.NewJobSeekerRequestDto;
 import com.apassignment.thejobs.dto.ResponseDto;
 import com.apassignment.thejobs.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,13 @@ public class AppointmentController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public ResponseEntity<ResponseDto> deleteAppointment(@PathVariable Long appointmentId) {
         ResponseDto responseDto = appointmentService.removeAppointment(appointmentId);
+        return new ResponseEntity<>(responseDto, responseDto.getStatus());
+    }
+
+    @PostMapping("/new/job-seeker")
+//    @PreAuthorize("hasAnyAuthority('ROLE_RECEPTIONIST')")
+    public ResponseEntity<ResponseDto> createAnAppointmentForNewJobSeeker(@RequestBody NewJobSeekerRequestDto newJobSeekerRequestDto) {
+        ResponseDto responseDto = appointmentService.createAppointmentByReceptionist(newJobSeekerRequestDto);
         return new ResponseEntity<>(responseDto, responseDto.getStatus());
     }
 }

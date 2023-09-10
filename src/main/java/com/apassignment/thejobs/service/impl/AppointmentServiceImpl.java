@@ -1,20 +1,12 @@
 package com.apassignment.thejobs.service.impl;
 
-import com.apassignment.thejobs.dto.AppointmentDto;
-import com.apassignment.thejobs.dto.AppointmentResponseDto;
-import com.apassignment.thejobs.dto.ResponseDto;
-import com.apassignment.thejobs.dto.ScheduleDto;
-import com.apassignment.thejobs.entity.Appointment;
-import com.apassignment.thejobs.entity.Consultant;
-import com.apassignment.thejobs.entity.JobSeeker;
-import com.apassignment.thejobs.entity.Schedule;
+import com.apassignment.thejobs.dto.*;
+import com.apassignment.thejobs.entity.*;
 import com.apassignment.thejobs.repository.AppointmentRepository;
 import com.apassignment.thejobs.repository.ConsultantRepository;
 import com.apassignment.thejobs.repository.JobSeekerRepository;
 import com.apassignment.thejobs.repository.ScheduleRepository;
-import com.apassignment.thejobs.service.AppointmentService;
-import com.apassignment.thejobs.service.EmailSenderService;
-import com.apassignment.thejobs.service.ScheduleService;
+import com.apassignment.thejobs.service.*;
 import com.apassignment.thejobs.util.ResponseType;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -42,6 +34,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     private JobSeekerRepository jobSeekerRepository;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private JobSeekerService jobSeekerService;
 
     @Autowired
     private EmailSenderService emailSenderService;
@@ -86,8 +84,17 @@ public class AppointmentServiceImpl implements AppointmentService {
                 ResponseType.SUCCESS,
                 HttpStatus.CREATED,
                 "Appointment has been saved successfully!",
-                modelMapper.map(savedAppointment, AppointmentDto.class)
+                modelMapper.map(savedAppointment, AppointmentResponseDto.class)
         );
+    }
+
+    @Override
+    public ResponseDto createAppointmentByReceptionist(NewJobSeekerRequestDto newJobSeekerRequestDto) {
+        ResponseDto jobSeeker = jobSeekerService.createJobSeeker(modelMapper.map(newJobSeekerRequestDto, JobSeekerDto.class));
+
+        newJobSeekerRequestDto.setJobSeeker(modelMapper.map(jobSeeker.getData(), JobSeekerDto.class));
+
+        return createAppointment(modelMapper.map(newJobSeekerRequestDto, AppointmentDto.class));
     }
 
     @Override
