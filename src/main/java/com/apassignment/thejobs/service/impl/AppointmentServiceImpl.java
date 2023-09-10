@@ -101,9 +101,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public ResponseDto removeAppointment(Long appointmentId) {
-        appointmentRepository.deleteById(appointmentId);
         Appointment appointment = loadAppointmentById(appointmentId);
-        scheduleRepository.changeScheduleBookedStatus(appointment.getSchedule().getScheduleId(), true);
+        scheduleRepository.changeScheduleBookedStatus(appointment.getSchedule().getScheduleId(), false);
+        appointmentRepository.deleteById(appointmentId);
         return new ResponseDto(
                 ResponseType.SUCCESS,
                 HttpStatus.OK,
@@ -180,5 +180,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public void deleteAllAppointments(List<Appointment> appointments) {
         appointmentRepository.deleteAll(appointments);
+    }
+
+    @Override
+    public Long getCountOfRecords() {
+        return appointmentRepository.count();
     }
 }

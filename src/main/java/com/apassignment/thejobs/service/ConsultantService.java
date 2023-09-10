@@ -18,5 +18,8 @@ public interface ConsultantService {
     ResponseDto createConsultant(Consultant consultantDto);
     ResponseDto updateConsultant(ConsultantDto consultantDto);
     ResponseDto removeConsultant(Long consultantId);
-
+    Long getCountOfRecords();
+    Long getScheduleCount(Long consultantId);
+    Long getAppointmentsCount(Long consultantId);
+    Long getNewAppointmentsCount(Long consultantId);
 }

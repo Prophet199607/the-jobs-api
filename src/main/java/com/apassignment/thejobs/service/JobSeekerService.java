@@ -25,4 +25,6 @@ public interface JobSeekerService {
     ResponseDto updateJobSeeker(JobSeekerDto jobSeekerDto);
 
     ResponseDto removeJobSeeker(Long jobSeekerId);
+
+    Long getCountOfRecords();
 }

@@ -6,7 +6,9 @@ import com.apassignment.thejobs.dto.ResponseDto;
 import com.apassignment.thejobs.dto.UserDto;
 import com.apassignment.thejobs.entity.*;
 import com.apassignment.thejobs.mapper.ConsultantMapper;
+import com.apassignment.thejobs.repository.AppointmentRepository;
 import com.apassignment.thejobs.repository.ConsultantRepository;
+import com.apassignment.thejobs.repository.ScheduleRepository;
 import com.apassignment.thejobs.service.AppointmentService;
 import com.apassignment.thejobs.service.ConsultantService;
 import com.apassignment.thejobs.service.EmailSenderService;
@@ -32,6 +34,12 @@ public class ConsultantServiceImpl implements ConsultantService {
 
     @Autowired
     private ConsultantRepository consultantRepository;
+
+    @Autowired
+    private ScheduleRepository scheduleRepository;
+
+    @Autowired
+    private AppointmentRepository appointmentRepository;
 
     @Autowired
     private ConsultantMapper consultantMapper;
@@ -232,5 +240,25 @@ public class ConsultantServiceImpl implements ConsultantService {
                 modelMapper.map(consultant, ConsultantResponseDto.class)
         );
 
+    }
+
+    @Override
+    public Long getCountOfRecords() {
+        return consultantRepository.count();
+    }
+
+    @Override
+    public Long getScheduleCount(Long consultantId) {
+        return scheduleRepository.countScheduleByConsultantConsultantId(consultantId);
+    }
+
+    @Override
+    public Long getAppointmentsCount(Long consultantId) {
+        return appointmentRepository.countAppointmentByConsultantConsultantId(consultantId);
+    }
+
+    @Override
+    public Long getNewAppointmentsCount(Long consultantId) {
+        return appointmentRepository.countAppointmentByConsultantConsultantIdAndStatus(consultantId, 0);
     }
 }

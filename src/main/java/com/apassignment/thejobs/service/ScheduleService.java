@@ -24,4 +24,6 @@ public interface ScheduleService {
     void deleteAllSchedules(List<Schedule> schedules);
 
     Long getLastInertedScheduleId();
+
+    Long getCountOfRecords();
 }

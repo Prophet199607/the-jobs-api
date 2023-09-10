@@ -65,7 +65,7 @@ public class AppointmentController {
     }
 
     @PostMapping("/new/job-seeker")
-//    @PreAuthorize("hasAnyAuthority('ROLE_RECEPTIONIST')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CONSULTANT')")
     public ResponseEntity<ResponseDto> createAnAppointmentForNewJobSeeker(@RequestBody NewJobSeekerRequestDto newJobSeekerRequestDto) {
         ResponseDto responseDto = appointmentService.createAppointmentByReceptionist(newJobSeekerRequestDto);
         return new ResponseEntity<>(responseDto, responseDto.getStatus());

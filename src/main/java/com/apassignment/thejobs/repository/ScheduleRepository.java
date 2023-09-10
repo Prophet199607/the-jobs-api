@@ -27,4 +27,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     @Modifying
     @Query("UPDATE Schedule s SET s.isBooked =:isBooked WHERE s.scheduleId =:scheduleId")
     void changeScheduleBookedStatus(@Param("scheduleId") Long scheduleId, @Param("isBooked") boolean isBooked);
+
+    Long countScheduleByConsultantConsultantId(Long consultantId);
 }
